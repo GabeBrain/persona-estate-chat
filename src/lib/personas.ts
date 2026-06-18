@@ -2,32 +2,46 @@ import renatoImg from "@/assets/persona-renato.jpg";
 import claudiaImg from "@/assets/persona-claudia.jpg";
 import rodrigoImg from "@/assets/persona-rodrigo.jpg";
 
+export type InterestLevel = "ALTO" | "MÉDIO" | "BAIXO";
+
 export type PersonaSummary = {
   id: string;
   name: string;
-  role: string;
-  tagline: string;
-  bio: string;
-  avatar: string;
-  accent: string;
-  initialInterest: "ALTO" | "MEDIO" | "BAIXO";
+  initials: string;
+  color: string; // tailwind bg class for avatar fallback
+  age: number;
+  city: string;
+  occupation: string;
+  profile: string;
+  income: string;
+  priceCeiling: string;
+  preferredProduct: string;
+  initialInterest: InterestLevel;
   decisionCriteria: string[];
   mainObjections: string[];
   suggestedPrompts: string[];
+  avatar: string;
+  markdownPath: string; // public path
+  // legacy/display
+  role: string;
+  tagline: string;
+  bio: string;
 };
 
-// Personas sintéticas portadas do POC PLAENGE — entrevistas qualitativas BRAIN Research
-// sobre empreendimento imobiliário em Governador Celso Ramos/SC.
 export const PERSONAS: PersonaSummary[] = [
   {
     id: "renato",
     name: "Renato Borges",
-    role: "Empresário — Tecnologia & Gestão",
-    tagline: "57 anos · Curitiba/PR · teto R$ 4–4,5 mi",
-    bio: "Casado, 2 filhos adultos. Renda ~R$ 100k/mês, trabalho remoto, divide tempo entre Curitiba e o litoral catarinense. Prefere lote para construir.",
-    avatar: renatoImg,
-    accent: "from-sky-200 to-slate-100",
-    initialInterest: "MEDIO",
+    initials: "RB",
+    color: "bg-emerald-700",
+    age: 57,
+    city: "Curitiba/PR",
+    occupation: "Empresário — Tecnologia & Gestão",
+    profile: "Casado, 2 filhos adultos",
+    income: "~R$ 100k/mês",
+    priceCeiling: "R$ 4–4,5 mi",
+    preferredProduct: "Lote + construção",
+    initialInterest: "MÉDIO",
     decisionCriteria: [
       "Acesso e localização (rota SC, sem Porto Belo)",
       "Privacidade e área verde generosa",
@@ -46,16 +60,25 @@ export const PERSONAS: PersonaSummary[] = [
       "O que você mais valoriza num empreendimento de praia hoje?",
       "Como você avalia acesso e localização no litoral de SC?",
     ],
+    avatar: renatoImg,
+    markdownPath: "/persona-md/renato.md",
+    role: "Empresário — Tecnologia & Gestão",
+    tagline: "57 anos · Curitiba/PR · teto R$ 4–4,5 mi",
+    bio: "Empresário, trabalho remoto, divide tempo entre Curitiba e o litoral catarinense. Prefere lote para construir.",
   },
   {
     id: "claudia",
     name: "Claudia Mendes",
-    role: "Empresária — Consultoria de RH",
-    tagline: "52 anos · São Paulo/SP · teto R$ 4,5–5 mi",
-    bio: "Casada, 1 filho. Sócia de consultoria de RH. Tem apartamento no Guarujá mas quer uma casa de praia de verdade, com mais privacidade, natureza e espaço.",
-    avatar: claudiaImg,
-    accent: "from-rose-200 to-amber-100",
-    initialInterest: "MEDIO",
+    initials: "CM",
+    color: "bg-purple-600",
+    age: 52,
+    city: "São Paulo/SP",
+    occupation: "Empresária — Consultoria de RH",
+    profile: "Casada, 1 filho",
+    income: "~R$ 150–200k/mês",
+    priceCeiling: "R$ 4,5–5 mi",
+    preferredProduct: "Casa pronta (prefere) ou lote",
+    initialInterest: "MÉDIO",
     decisionCriteria: [
       "Vista para o mar (essencial)",
       "Tamanho do lote e privacidade com natureza",
@@ -74,15 +97,24 @@ export const PERSONAS: PersonaSummary[] = [
       "Que tipo de padrão de empreendimento te agrada?",
       "Como você pensa em gestão de uma casa longe de SP?",
     ],
+    avatar: claudiaImg,
+    markdownPath: "/persona-md/claudia.md",
+    role: "Empresária — Consultoria de RH",
+    tagline: "52 anos · São Paulo/SP · teto R$ 4,5–5 mi",
+    bio: "Sócia de consultoria de RH. Tem apartamento no Guarujá mas quer uma casa de praia com mais privacidade e natureza.",
   },
   {
     id: "rodrigo",
     name: "Rodrigo Faria",
-    role: "Empresário — Seguros e Mentoria",
-    tagline: "42 anos · Goiânia/GO · teto R$ 7–7,5 mi",
-    bio: "Casado, 2 filhas (10 e 3 anos), 1 cachorro. ~7 imóveis no patrimônio. Já tem apto em Balneário Camboriú mas busca algo mais exclusivo e com natureza.",
-    avatar: rodrigoImg,
-    accent: "from-emerald-200 to-stone-100",
+    initials: "RF",
+    color: "bg-blue-600",
+    age: 42,
+    city: "Goiânia/GO",
+    occupation: "Empresário — Seguros e Mentoria",
+    profile: "Casado, 2 filhas",
+    income: "~R$ 120–130k/mês",
+    priceCeiling: "R$ 7–7,5 mi (com negociação)",
+    preferredProduct: "Lote + construção própria",
     initialInterest: "ALTO",
     decisionCriteria: [
       "Vista e acesso à praia (essencial)",
@@ -102,9 +134,23 @@ export const PERSONAS: PersonaSummary[] = [
       "O que faz um condomínio de praia ser exclusivo pra você?",
       "Como você pensa o equilíbrio entre patrimônio e uso da família?",
     ],
+    avatar: rodrigoImg,
+    markdownPath: "/persona-md/rodrigo.md",
+    role: "Empresário — Seguros e Mentoria",
+    tagline: "42 anos · Goiânia/GO · teto R$ 7–7,5 mi",
+    bio: "Empresário, 7 imóveis no patrimônio. Já tem apto em Balneário Camboriú mas busca algo mais exclusivo.",
   },
 ];
 
 export function getPersona(id: string): PersonaSummary | undefined {
   return PERSONAS.find((p) => p.id === id);
+}
+
+export function normalizeInteresse(val?: string | null): InterestLevel {
+  if (!val) return "MÉDIO";
+  const up = val.toUpperCase().trim();
+  if (up === "MEDIO" || up === "MÉDIO") return "MÉDIO";
+  if (up === "ALTO") return "ALTO";
+  if (up === "BAIXO") return "BAIXO";
+  return "MÉDIO";
 }
