@@ -1,16 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import Anthropic from "@anthropic-ai/sdk";
+import type { MessageParam } from "@anthropic-ai/sdk/resources/messages";
 import { getSystemPrompt } from "@/lib/personas.server";
-
-type AnthropicMessage = {
-  role: "user" | "assistant";
-  content: string | Array<Record<string, unknown>>;
-};
 
 type ChatBody = {
   personaId?: string;
   forcedInterest?: string | null;
-  messages?: AnthropicMessage[];
+  messages?: MessageParam[];
 };
 
 const MODEL = "claude-sonnet-4-5";
