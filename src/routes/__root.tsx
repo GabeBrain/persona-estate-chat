@@ -77,7 +77,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Vozes do Mercado" },
+      { title: "personaBrain" },
       {
         name: "description",
         content:
@@ -85,6 +85,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { property: "og:title", content: "personaBrain" },
+      { name: "twitter:title", content: "personaBrain" },
+      { name: "description", content: "Imóvel AI Companion offers AI-powered conversations for the real estate market." },
+      { property: "og:description", content: "Imóvel AI Companion offers AI-powered conversations for the real estate market." },
+      { name: "twitter:description", content: "Imóvel AI Companion offers AI-powered conversations for the real estate market." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/337891e4-bf56-44fd-a7a7-d0c433507d51/id-preview-44d17e60--d66b4485-9165-4595-8435-04c408aa6e73.lovable.app-1781805609388.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/337891e4-bf56-44fd-a7a7-d0c433507d51/id-preview-44d17e60--d66b4485-9165-4595-8435-04c408aa6e73.lovable.app-1781805609388.png" },
     ],
     links: [
       {
