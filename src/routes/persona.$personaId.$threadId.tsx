@@ -741,23 +741,6 @@ function ChatPage() {
                     </div>
                   </div>
                   <p className="text-sm leading-relaxed text-stone-600">{persona.bio}</p>
-                  <div className="space-y-2 pt-2">
-                    <p className="text-xs uppercase tracking-widest text-stone-500">
-                      Sugestões para começar
-                    </p>
-                    {persona.suggestedPrompts.map((s) => (
-                      <button
-                        key={s}
-                        onClick={() => {
-                          setInput(s);
-                          inputRef.current?.focus();
-                        }}
-                        className="block w-full rounded-lg border border-stone-200 bg-white px-4 py-3 text-left text-sm text-stone-700 hover:border-emerald-700"
-                      >
-                        {s}
-                      </button>
-                    ))}
-                  </div>
                 </div>
               )}
 
