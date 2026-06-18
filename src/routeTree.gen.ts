@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PersonaPersonaIdRouteImport } from './routes/persona.$personaId'
+import { Route as ApiEvaluateRouteImport } from './routes/api/evaluate'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as PersonaPersonaIdThreadIdRouteImport } from './routes/persona.$personaId.$threadId'
 
@@ -22,6 +23,11 @@ const IndexRoute = IndexRouteImport.update({
 const PersonaPersonaIdRoute = PersonaPersonaIdRouteImport.update({
   id: '/persona/$personaId',
   path: '/persona/$personaId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiEvaluateRoute = ApiEvaluateRouteImport.update({
+  id: '/api/evaluate',
+  path: '/api/evaluate',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatRoute = ApiChatRouteImport.update({
@@ -39,12 +45,14 @@ const PersonaPersonaIdThreadIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/evaluate': typeof ApiEvaluateRoute
   '/persona/$personaId': typeof PersonaPersonaIdRouteWithChildren
   '/persona/$personaId/$threadId': typeof PersonaPersonaIdThreadIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/evaluate': typeof ApiEvaluateRoute
   '/persona/$personaId': typeof PersonaPersonaIdRouteWithChildren
   '/persona/$personaId/$threadId': typeof PersonaPersonaIdThreadIdRoute
 }
@@ -52,6 +60,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/evaluate': typeof ApiEvaluateRoute
   '/persona/$personaId': typeof PersonaPersonaIdRouteWithChildren
   '/persona/$personaId/$threadId': typeof PersonaPersonaIdThreadIdRoute
 }
@@ -60,18 +69,21 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/api/chat'
+    | '/api/evaluate'
     | '/persona/$personaId'
     | '/persona/$personaId/$threadId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/api/chat'
+    | '/api/evaluate'
     | '/persona/$personaId'
     | '/persona/$personaId/$threadId'
   id:
     | '__root__'
     | '/'
     | '/api/chat'
+    | '/api/evaluate'
     | '/persona/$personaId'
     | '/persona/$personaId/$threadId'
   fileRoutesById: FileRoutesById
@@ -79,6 +91,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApiChatRoute: typeof ApiChatRoute
+  ApiEvaluateRoute: typeof ApiEvaluateRoute
   PersonaPersonaIdRoute: typeof PersonaPersonaIdRouteWithChildren
 }
 
@@ -96,6 +109,13 @@ declare module '@tanstack/react-router' {
       path: '/persona/$personaId'
       fullPath: '/persona/$personaId'
       preLoaderRoute: typeof PersonaPersonaIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/evaluate': {
+      id: '/api/evaluate'
+      path: '/api/evaluate'
+      fullPath: '/api/evaluate'
+      preLoaderRoute: typeof ApiEvaluateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/chat': {
@@ -129,6 +149,7 @@ const PersonaPersonaIdRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApiChatRoute: ApiChatRoute,
+  ApiEvaluateRoute: ApiEvaluateRoute,
   PersonaPersonaIdRoute: PersonaPersonaIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
