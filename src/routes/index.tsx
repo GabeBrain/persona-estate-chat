@@ -61,12 +61,12 @@ function Index() {
               params={{ personaId: p.id }}
               className="group relative overflow-hidden rounded-2xl border border-stone-200 bg-white transition hover:-translate-y-0.5 hover:shadow-lg"
             >
-              <div className={`relative h-48 bg-gradient-to-br ${p.accent}`}>
+              <div className="relative h-48 bg-stone-100">
                 <img
                   src={p.avatar}
                   alt={p.name}
                   loading="lazy"
-                  className="absolute inset-0 h-full w-full object-cover mix-blend-multiply"
+                  className="absolute inset-0 h-full w-full object-cover"
                 />
               </div>
               <div className="space-y-2 p-5">
