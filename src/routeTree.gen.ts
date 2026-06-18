@@ -10,33 +10,76 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PersonaPersonaIdRouteImport } from './routes/persona.$personaId'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as PersonaPersonaIdThreadIdRouteImport } from './routes/persona.$personaId.$threadId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PersonaPersonaIdRoute = PersonaPersonaIdRouteImport.update({
+  id: '/persona/$personaId',
+  path: '/persona/$personaId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PersonaPersonaIdThreadIdRoute =
+  PersonaPersonaIdThreadIdRouteImport.update({
+    id: '/$threadId',
+    path: '/$threadId',
+    getParentRoute: () => PersonaPersonaIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/chat': typeof ApiChatRoute
+  '/persona/$personaId': typeof PersonaPersonaIdRouteWithChildren
+  '/persona/$personaId/$threadId': typeof PersonaPersonaIdThreadIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/chat': typeof ApiChatRoute
+  '/persona/$personaId': typeof PersonaPersonaIdRouteWithChildren
+  '/persona/$personaId/$threadId': typeof PersonaPersonaIdThreadIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/chat': typeof ApiChatRoute
+  '/persona/$personaId': typeof PersonaPersonaIdRouteWithChildren
+  '/persona/$personaId/$threadId': typeof PersonaPersonaIdThreadIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/api/chat'
+    | '/persona/$personaId'
+    | '/persona/$personaId/$threadId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/api/chat'
+    | '/persona/$personaId'
+    | '/persona/$personaId/$threadId'
+  id:
+    | '__root__'
+    | '/'
+    | '/api/chat'
+    | '/persona/$personaId'
+    | '/persona/$personaId/$threadId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiChatRoute: typeof ApiChatRoute
+  PersonaPersonaIdRoute: typeof PersonaPersonaIdRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,22 +91,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/persona/$personaId': {
+      id: '/persona/$personaId'
+      path: '/persona/$personaId'
+      fullPath: '/persona/$personaId'
+      preLoaderRoute: typeof PersonaPersonaIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/persona/$personaId/$threadId': {
+      id: '/persona/$personaId/$threadId'
+      path: '/$threadId'
+      fullPath: '/persona/$personaId/$threadId'
+      preLoaderRoute: typeof PersonaPersonaIdThreadIdRouteImport
+      parentRoute: typeof PersonaPersonaIdRoute
+    }
   }
 }
 
+interface PersonaPersonaIdRouteChildren {
+  PersonaPersonaIdThreadIdRoute: typeof PersonaPersonaIdThreadIdRoute
+}
+
+const PersonaPersonaIdRouteChildren: PersonaPersonaIdRouteChildren = {
+  PersonaPersonaIdThreadIdRoute: PersonaPersonaIdThreadIdRoute,
+}
+
+const PersonaPersonaIdRouteWithChildren =
+  PersonaPersonaIdRoute._addFileChildren(PersonaPersonaIdRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiChatRoute: ApiChatRoute,
+  PersonaPersonaIdRoute: PersonaPersonaIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
