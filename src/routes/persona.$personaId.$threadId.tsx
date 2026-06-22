@@ -219,8 +219,9 @@ function ChatPage() {
       updatedAt: Date.now(),
       messages,
     };
-    const updated = upsertThread(personaId, thread);
+    const { threads: updated, saved } = upsertThread(personaId, thread);
     setThreads(updated);
+    if (!saved) setError("Armazenamento local cheio. Exporte a conversa ou apague threads antigas.");
   }, [messages, streaming, personaId, threadId]);
 
   // Autoscroll
@@ -390,7 +391,7 @@ function ChatPage() {
     setTokenInfo({ input: 0, output: 0 });
     setAttachedFile(null);
     // Also wipe persisted thread
-    const updated = upsertThread(personaId, {
+    const { threads: updated } = upsertThread(personaId, {
       id: threadId,
       title: "Nova conversa",
       updatedAt: Date.now(),
@@ -769,8 +770,15 @@ function ChatPage() {
           </div>
 
           {error && (
-            <div className="mx-4 mb-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-700">
-              {error}
+            <div className="mx-4 mb-2 flex items-start justify-between gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-700">
+              <span>{error}</span>
+              <button
+                onClick={() => setError("")}
+                className="mt-0.5 shrink-0 text-red-400 hover:text-red-700"
+                aria-label="Fechar erro"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
             </div>
           )}
 

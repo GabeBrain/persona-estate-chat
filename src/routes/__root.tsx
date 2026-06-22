@@ -35,8 +35,9 @@ function NotFoundComponent() {
 }
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error(error);
+  console.error("[ErrorBoundary]", error);
   const router = useRouter();
+  const isDev = import.meta.env.DEV;
   useEffect(() => {
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
@@ -50,6 +51,12 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         <p className="mt-2 text-sm text-muted-foreground">
           Something went wrong on our end. You can try refreshing or head back home.
         </p>
+        {isDev && (
+          <pre className="mt-4 max-h-48 overflow-auto rounded-md bg-muted px-4 py-3 text-left text-xs text-destructive">
+            {error?.message}
+            {error?.stack ? `\n\n${error.stack}` : ""}
+          </pre>
+        )}
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {

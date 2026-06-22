@@ -41,19 +41,25 @@ export function loadThreads(personaId: string): Thread[] {
   }
 }
 
-export function saveThreads(personaId: string, threads: Thread[]) {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(KEY(personaId), JSON.stringify(threads));
+export function saveThreads(personaId: string, threads: Thread[]): boolean {
+  if (typeof window === "undefined") return true;
+  try {
+    window.localStorage.setItem(KEY(personaId), JSON.stringify(threads));
+    return true;
+  } catch (err) {
+    console.warn("[chat-storage] localStorage quota exceeded:", err);
+    return false;
+  }
 }
 
-export function upsertThread(personaId: string, thread: Thread): Thread[] {
+export function upsertThread(personaId: string, thread: Thread): { threads: Thread[]; saved: boolean } {
   const all = loadThreads(personaId);
   const idx = all.findIndex((t) => t.id === thread.id);
   if (idx >= 0) all[idx] = thread;
   else all.unshift(thread);
   all.sort((a, b) => b.updatedAt - a.updatedAt);
-  saveThreads(personaId, all);
-  return all;
+  const saved = saveThreads(personaId, all);
+  return { threads: all, saved };
 }
 
 export function deleteThread(personaId: string, threadId: string): Thread[] {

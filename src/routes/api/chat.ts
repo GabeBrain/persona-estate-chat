@@ -9,25 +9,42 @@ type ChatBody = {
   messages?: MessageParam[];
 };
 
-const MODEL = "claude-sonnet-4-5";
+const MODEL = "claude-sonnet-4-6";
+const VALID_INTEREST = new Set(["ALTO", "MÉDIO", "BAIXO"]);
+const MAX_BODY_BYTES = 20 * 1024 * 1024; // 20 MB
 
 export const Route = createFileRoute("/api/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const { personaId, messages, forcedInterest } = (await request.json()) as ChatBody;
+        const contentLength = Number(request.headers.get("content-length") ?? 0);
+        if (contentLength > MAX_BODY_BYTES) {
+          return new Response("Payload too large", { status: 413 });
+        }
+
+        let body: ChatBody;
+        try {
+          body = (await request.json()) as ChatBody;
+        } catch {
+          return new Response("Invalid JSON", { status: 400 });
+        }
+        const { personaId, messages } = body;
+        const forcedInterest = body.forcedInterest != null
+          ? (VALID_INTEREST.has(body.forcedInterest) ? body.forcedInterest : null)
+          : null;
+
         if (!personaId || !Array.isArray(messages) || messages.length === 0) {
           return new Response("personaId and messages are required", { status: 400 });
         }
 
         const apiKey = process.env.CLAUDE_API_KEY;
-        if (!apiKey) return new Response("Missing CLAUDE_API_KEY", { status: 500 });
+        if (!apiKey) return new Response("Configuração do servidor incorreta", { status: 500 });
 
         let system: string;
         try {
           system = getSystemPrompt(personaId, forcedInterest ?? null);
-        } catch (e) {
-          return new Response((e as Error).message, { status: 404 });
+        } catch {
+          return new Response("Persona não encontrada", { status: 404 });
         }
 
         const client = new Anthropic({ apiKey });
@@ -60,7 +77,8 @@ export const Route = createFileRoute("/api/chat")({
               }
               send({ type: "done", inputTokens, outputTokens });
             } catch (err) {
-              send({ type: "error", message: (err as Error).message });
+              console.error("[/api/chat] stream error:", err);
+              send({ type: "error", message: "Erro interno ao processar resposta." });
             } finally {
               controller.close();
             }
