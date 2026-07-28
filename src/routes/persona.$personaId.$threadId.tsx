@@ -15,7 +15,13 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-import { getPersona, normalizeInteresse, PERSONAS, type InterestLevel } from "@/lib/personas";
+import {
+  getPersona,
+  normalizeInteresse,
+  PERSONAS,
+  type InterestLevel,
+  type PersonaContext,
+} from "@/lib/personas";
 import {
   deleteThread,
   fileToBase64,
@@ -33,6 +39,14 @@ import {
 export const Route = createFileRoute("/persona/$personaId/$threadId")({
   component: ChatPage,
 });
+
+const MAX_ATTACHMENTS = 5;
+
+const CONTEXT_LABELS: Record<PersonaContext, string> = {
+  plaenge: "PLAENGE — Gov. Celso Ramos/SC",
+  aquiraz: "Novo Mandara — Porto das Dunas/CE",
+};
+const CONTEXT_ORDER: PersonaContext[] = ["plaenge", "aquiraz"];
 
 // --- JSON parsing helpers (mirror POC) -----------------------------
 
@@ -167,11 +181,9 @@ function ChatPage() {
   const [forcedInterest, setForcedInterest] = useState<InterestLevel | null>(null);
   const [isManualInterest, setIsManualInterest] = useState(false);
 
-  const [attachedFile, setAttachedFile] = useState<{
-    name: string;
-    type: string;
-    base64: string;
-  } | null>(null);
+  const [attachedFiles, setAttachedFiles] = useState<
+    { name: string; type: string; base64: string }[]
+  >([]);
   const [dragOver, setDragOver] = useState(false);
 
   const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
@@ -198,7 +210,7 @@ function ChatPage() {
     setForcedInterest(null);
     setIsManualInterest(false);
     setInterestLevel(persona.initialInterest);
-    setAttachedFile(null);
+    setAttachedFiles([]);
   }, [personaId, threadId, persona]);
 
   // Load persona markdown
@@ -221,7 +233,10 @@ function ChatPage() {
     };
     const { threads: updated, saved } = upsertThread(personaId, thread);
     setThreads(updated);
-    if (!saved) setError("Armazenamento local cheio. Exporte a conversa ou apague threads antigas.");
+    if (!saved)
+      setError(
+        "Armazenamento local cheio mesmo após remover anexos antigos. Exporte a conversa ou apague threads antigas.",
+      );
   }, [messages, streaming, personaId, threadId]);
 
   // Autoscroll
@@ -234,39 +249,58 @@ function ChatPage() {
     inputRef.current?.focus();
   }, [threadId]);
 
-  const handleFileAttach = useCallback(async (file: File) => {
-    if (!isValidAttachment(file)) {
-      setError("Apenas imagens ou PDFs.");
-      return;
+  const handleFilesAttach = useCallback(async (files: File[]) => {
+    if (files.length === 0) return;
+
+    const invalid = files.some((f) => !isValidAttachment(f));
+    if (invalid) setError("Apenas imagens ou PDFs.");
+    const valid = files.filter(isValidAttachment);
+    if (valid.length === 0) return;
+
+    let attachErr: string | null = null;
+    const converted: { name: string; type: string; base64: string }[] = [];
+    for (const file of valid) {
+      try {
+        const { base64, mediaType } = await fileToBase64(file);
+        converted.push({ name: file.name, type: mediaType, base64 });
+      } catch (e) {
+        attachErr = "Erro ao processar arquivo: " + (e as Error).message;
+      }
     }
-    try {
-      const base64 = await fileToBase64(file);
-      setAttachedFile({ name: file.name, type: file.type, base64 });
-    } catch (e) {
-      setError("Erro ao processar arquivo: " + (e as Error).message);
-    }
+
+    setAttachedFiles((prev) => {
+      const room = MAX_ATTACHMENTS - prev.length;
+      if (room <= 0) {
+        setError(`Máximo de ${MAX_ATTACHMENTS} anexos por mensagem.`);
+        return prev;
+      }
+      if (converted.length > room) {
+        setError(`Máximo de ${MAX_ATTACHMENTS} anexos por mensagem.`);
+      }
+      return [...prev, ...converted.slice(0, room)];
+    });
+    if (attachErr) setError(attachErr);
   }, []);
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setDragOver(false);
-    const file = e.dataTransfer.files[0];
-    if (file) handleFileAttach(file);
+    handleFilesAttach(Array.from(e.dataTransfer.files));
   };
 
-  // Paste image from clipboard
+  // Paste image(s) from clipboard
   useEffect(() => {
     function onPaste(e: ClipboardEvent) {
       if (!e.clipboardData) return;
-      const item = Array.from(e.clipboardData.items).find((i) => i.type.startsWith("image/"));
-      if (item) {
-        const file = item.getAsFile();
-        if (file) handleFileAttach(file);
-      }
+      const files = Array.from(e.clipboardData.items)
+        .filter((i) => i.type.startsWith("image/"))
+        .map((i) => i.getAsFile())
+        .filter((f): f is File => f !== null);
+      if (files.length > 0) handleFilesAttach(files);
     }
     window.addEventListener("paste", onPaste);
     return () => window.removeEventListener("paste", onPaste);
-  }, [handleFileAttach]);
+  }, [handleFilesAttach]);
 
   const runEvaluation = useCallback(async () => {
     if (messages.length === 0) {
@@ -294,7 +328,7 @@ function ChatPage() {
   const sendMessage = useCallback(
     async (text: string) => {
       if (!persona) return;
-      if ((!text.trim() && !attachedFile) || streaming) return;
+      if ((!text.trim() && attachedFiles.length === 0) || streaming) return;
 
       if (text.trim().toLowerCase() === "/encerrar") {
         setInput("");
@@ -303,26 +337,26 @@ function ChatPage() {
       }
 
       let userContent: ChatMessage["content"];
-      if (attachedFile) {
-        const isPdf = attachedFile.type === "application/pdf";
-        const mediaBlock = isPdf
-          ? {
-              type: "document" as const,
-              source: {
-                type: "base64" as const,
-                media_type: "application/pdf" as const,
-                data: attachedFile.base64,
+      if (attachedFiles.length > 0) {
+        const blocks: ChatMessage["content"] = attachedFiles.map((f) =>
+          f.type === "application/pdf"
+            ? {
+                type: "document" as const,
+                source: {
+                  type: "base64" as const,
+                  media_type: "application/pdf" as const,
+                  data: f.base64,
+                },
+              }
+            : {
+                type: "image" as const,
+                source: {
+                  type: "base64" as const,
+                  media_type: f.type,
+                  data: f.base64,
+                },
               },
-            }
-          : {
-              type: "image" as const,
-              source: {
-                type: "base64" as const,
-                media_type: attachedFile.type,
-                data: attachedFile.base64,
-              },
-            };
-        const blocks: ChatMessage["content"] = [mediaBlock];
+        );
         if (text.trim()) blocks.push({ type: "text", text: text.trim() });
         userContent = blocks;
       } else {
@@ -332,12 +366,14 @@ function ChatPage() {
       const userMessage: ChatMessage = {
         role: "user",
         content: userContent,
-        ...(attachedFile ? { _attachmentName: attachedFile.name } : {}),
+        ...(attachedFiles.length > 0
+          ? { _attachmentNames: attachedFiles.map((f) => f.name) }
+          : {}),
       };
       const newMessages = [...messages, userMessage];
       setMessages(newMessages);
       setInput("");
-      setAttachedFile(null);
+      setAttachedFiles([]);
       setError("");
       setStreaming(true);
       setStreamingContent("");
@@ -374,7 +410,7 @@ function ChatPage() {
         },
       });
     },
-    [persona, attachedFile, streaming, messages, personaId, forcedInterest, runEvaluation],
+    [persona, attachedFiles, streaming, messages, personaId, forcedInterest, runEvaluation],
   );
 
   const stopStreaming = () => abortRef.current?.abort();
@@ -389,7 +425,7 @@ function ChatPage() {
     setEvaluation(null);
     setError("");
     setTokenInfo({ input: 0, output: 0 });
-    setAttachedFile(null);
+    setAttachedFiles([]);
     // Also wipe persisted thread
     const { threads: updated } = upsertThread(personaId, {
       id: threadId,
@@ -408,8 +444,8 @@ function ChatPage() {
       let contentStr: string;
       if (typeof m.content === "string") contentStr = m.content;
       else {
-        const attachName = m._attachmentName ?? "anexo";
-        const parts = [`[Anexo: ${attachName}]`];
+        const attachNames = m._attachmentNames?.join(", ") ?? "anexo";
+        const parts = [`[Anexo: ${attachNames}]`];
         const textBlock = m.content.find((b) => b.type === "text");
         if (textBlock && textBlock.type === "text") parts.push(textBlock.text);
         contentStr = parts.join("\n");
@@ -484,18 +520,34 @@ function ChatPage() {
           <div className="flex items-center gap-2">
             <select
               value={personaId}
-              onChange={(e) =>
-                navigate({
-                  to: "/persona/$personaId",
-                  params: { personaId: e.target.value },
-                })
-              }
+              onChange={(e) => {
+                const nextId = e.target.value;
+                const nextPersona = getPersona(nextId);
+                if (nextPersona && nextPersona.context !== persona.context) {
+                  // Contexto diferente (ex.: PLAENGE → Novo Mandara): não faz
+                  // sentido continuar uma thread do produto anterior, então
+                  // já abre uma conversa nova, sem modal de confirmação.
+                  navigate({
+                    to: "/persona/$personaId/$threadId",
+                    params: { personaId: nextId, threadId: newThreadId() },
+                  });
+                } else {
+                  navigate({
+                    to: "/persona/$personaId",
+                    params: { personaId: nextId },
+                  });
+                }
+              }}
               className="rounded-lg border border-stone-200 bg-white px-3 py-1.5 text-sm font-medium text-stone-800 focus:border-emerald-700 focus:outline-none"
             >
-              {PERSONAS.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
+              {CONTEXT_ORDER.map((ctx) => (
+                <optgroup key={ctx} label={CONTEXT_LABELS[ctx]}>
+                  {PERSONAS.filter((p) => p.context === ctx).map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </optgroup>
               ))}
             </select>
           </div>
@@ -581,6 +633,13 @@ function ChatPage() {
             <Stat label="Produto" value={persona.preferredProduct} />
             <Stat label="Perfil" value={persona.profile} />
           </div>
+
+          {persona.context === "aquiraz" && (
+            <p className="text-xs text-stone-500">
+              <span className="font-medium text-stone-700">Empreendimento:</span>{" "}
+              Novo Mandara · Apartamento vertical resort · Porto das Dunas/CE
+            </p>
+          )}
 
           {/* Interest manual override */}
           <div className="rounded-xl border border-stone-200 p-3">
@@ -785,21 +844,28 @@ function ChatPage() {
           {/* Input area */}
           <div className="border-t border-stone-200 bg-white px-4 py-3 sm:px-6">
             <div className="mx-auto max-w-3xl space-y-2">
-              {attachedFile && (
-                <div className="flex items-center gap-2 rounded-lg border border-stone-200 bg-stone-50 px-3 py-2 text-xs text-stone-700">
-                  {attachedFile.type === "application/pdf" ? (
-                    <FileText className="h-4 w-4 text-red-500" />
-                  ) : (
-                    <ImageIcon className="h-4 w-4 text-emerald-700" />
-                  )}
-                  <span className="flex-1 truncate">{attachedFile.name}</span>
-                  <button
-                    onClick={() => setAttachedFile(null)}
-                    className="text-stone-400 hover:text-stone-700"
-                    aria-label="Remover anexo"
-                  >
-                    <X className="h-3.5 w-3.5" />
-                  </button>
+              {attachedFiles.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {attachedFiles.map((f, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-2 rounded-lg border border-stone-200 bg-stone-50 px-3 py-2 text-xs text-stone-700"
+                    >
+                      {f.type === "application/pdf" ? (
+                        <FileText className="h-4 w-4 text-red-500" />
+                      ) : (
+                        <ImageIcon className="h-4 w-4 text-emerald-700" />
+                      )}
+                      <span className="max-w-[10rem] truncate">{f.name}</span>
+                      <button
+                        onClick={() => setAttachedFiles((prev) => prev.filter((_, j) => j !== i))}
+                        className="text-stone-400 hover:text-stone-700"
+                        aria-label="Remover anexo"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  ))}
                 </div>
               )}
 
@@ -814,10 +880,10 @@ function ChatPage() {
                   ref={fileInputRef}
                   type="file"
                   accept="image/*,application/pdf"
+                  multiple
                   className="hidden"
                   onChange={(e) => {
-                    const f = e.target.files?.[0];
-                    if (f) handleFileAttach(f);
+                    handleFilesAttach(Array.from(e.target.files ?? []));
                     e.target.value = "";
                   }}
                 />
@@ -859,7 +925,7 @@ function ChatPage() {
                 ) : (
                   <button
                     type="submit"
-                    disabled={evaluating || (!input.trim() && !attachedFile)}
+                    disabled={evaluating || (!input.trim() && attachedFiles.length === 0)}
                     className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-stone-900 text-white hover:bg-stone-700 disabled:opacity-40"
                     aria-label="Enviar"
                   >
@@ -870,7 +936,8 @@ function ChatPage() {
 
               <div className="flex items-center justify-between">
                 <p className="text-xs text-stone-400">
-                  Enter envia · Shift+Enter quebra linha · cole/arraste imagem ou PDF
+                  Enter envia · Shift+Enter quebra linha · cole/arraste imagens ou PDF (até {MAX_ATTACHMENTS}) ·{" "}
+                  Empreendimento: {CONTEXT_LABELS[persona.context]}
                 </p>
                 <button
                   onClick={() => sendMessage("/encerrar")}
@@ -988,7 +1055,7 @@ function MessageBubble({
           {(hasImage || hasPdf) && (
             <div className="flex items-center gap-2 rounded-lg bg-stone-100 px-3 py-1.5 text-xs text-stone-600">
               {hasPdf ? <FileText className="h-3.5 w-3.5" /> : <ImageIcon className="h-3.5 w-3.5" />}
-              {message._attachmentName ?? "anexo"}
+              {message._attachmentNames?.join(", ") ?? "anexo"}
             </div>
           )}
           {text && (

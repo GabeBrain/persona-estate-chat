@@ -1,11 +1,18 @@
 import renatoImg from "@/assets/persona-renato.jpg";
 import claudiaImg from "@/assets/persona-claudia.jpg";
 import rodrigoImg from "@/assets/persona-rodrigo.jpg";
+import sergioCeImg from "@/assets/persona-sergio_ce.jpg";
+import henriqueCeImg from "@/assets/persona-henrique_ce.jpg";
+import esterCeImg from "@/assets/persona-ester_ce.jpg";
+import paulaCeImg from "@/assets/persona-paula_ce.jpg";
 
 export type InterestLevel = "ALTO" | "MÉDIO" | "BAIXO";
 
+export type PersonaContext = "plaenge" | "aquiraz";
+
 export type PersonaSummary = {
   id: string;
+  context: PersonaContext;
   name: string;
   initials: string;
   color: string; // tailwind bg class for avatar fallback
@@ -31,6 +38,7 @@ export type PersonaSummary = {
 export const PERSONAS: PersonaSummary[] = [
   {
     id: "renato",
+    context: "plaenge",
     name: "Renato Borges",
     initials: "RB",
     color: "bg-emerald-700",
@@ -68,6 +76,7 @@ export const PERSONAS: PersonaSummary[] = [
   },
   {
     id: "claudia",
+    context: "plaenge",
     name: "Claudia Mendes",
     initials: "CM",
     color: "bg-purple-600",
@@ -105,6 +114,7 @@ export const PERSONAS: PersonaSummary[] = [
   },
   {
     id: "rodrigo",
+    context: "plaenge",
     name: "Rodrigo Faria",
     initials: "RF",
     color: "bg-blue-600",
@@ -139,6 +149,158 @@ export const PERSONAS: PersonaSummary[] = [
     role: "Empresário — Seguros e Mentoria",
     tagline: "42 anos · Goiânia/GO · teto R$ 7–7,5 mi",
     bio: "Empresário, 7 imóveis no patrimônio. Já tem apto em Balneário Camboriú mas busca algo mais exclusivo.",
+  },
+  {
+    id: "sergio_ce",
+    context: "aquiraz",
+    name: "Sérgio Cavalcante",
+    initials: "SC",
+    color: "bg-amber-600",
+    age: 52,
+    city: "Fortaleza/CE",
+    occupation: "Empresário — Varejo e Combustível",
+    profile: "Casado, 1 filha",
+    income: "~R$ 200–250k/mês",
+    priceCeiling: "R$ 3–3,5 mi (negociável)",
+    preferredProduct: "Apartamento vertical de resort",
+    initialInterest: "ALTO",
+    decisionCriteria: [
+      "Localização Porto das Dunas",
+      "Materiais resistentes à maresia",
+      "Vagas fixas + carregador elétrico exclusivo",
+      "Resort completo com academia e restaurante",
+      "Transporte elétrico interno para idosos",
+    ],
+    mainObjections: [
+      "Vagas rotativas — fator de exclusão",
+      "Condomínio compartilhado com outro empreendimento",
+      "Maresia sem solução técnica demonstrada",
+      "Preço acima de R$ 4 mi sem justificativa",
+    ],
+    suggestedPrompts: [
+      "Me conta como você pensa em imóvel de praia como investimento hoje?",
+      "O que faria um empreendimento em Porto das Dunas superar o seu condomínio atual?",
+      "Quais especificações técnicas você mais questiona num imóvel litorâneo?",
+    ],
+    avatar: sergioCeImg,
+    markdownPath: "/persona-md/sergio_ce.md",
+    role: "Empresário — Varejo e Combustível",
+    tagline: "52 anos · Fortaleza/CE · teto R$ 3–3,5 mi",
+    bio: "Empresário cearense com holdings no varejo e combustível, já frequenta a região de Aquiraz e busca um imóvel de praia com potencial de investimento e uso pessoal.",
+  },
+  {
+    id: "henrique_ce",
+    context: "aquiraz",
+    name: "Henrique Matos",
+    initials: "HM",
+    color: "bg-cyan-700",
+    age: 45,
+    city: "Fortaleza/CE",
+    occupation: "Médico Cardiologista",
+    profile: "Casado, 2 filhos",
+    income: "~R$ 180–220k/mês",
+    priceCeiling: "R$ 3–3,5 mi",
+    preferredProduct: "Apartamento 3 suítes + wellness",
+    initialInterest: "MÉDIO",
+    decisionCriteria: [
+      "Proximidade de Fortaleza (20 min)",
+      "3 suítes mínimo + varanda gourmet",
+      "Academia e wellness com profissional fixo",
+      "Potencial de locação explicado",
+      "Taxa de condomínio até R$ 4–5 mil",
+    ],
+    mainObjections: [
+      "Custo fixo vs. frequência de uso real",
+      "Taxa de condomínio acima de R$ 5 mil",
+      "Condomínio compartilhado — fator de exclusão",
+      "Preço acima de R$ 5 mi",
+    ],
+    suggestedPrompts: [
+      "Como é hoje sua rotina de família nos fins de semana?",
+      "O que pesa mais na decisão de comprar um imóvel de lazer: uso ou investimento?",
+      "Que estrutura de bem-estar faria sentido pra sua rotina?",
+    ],
+    avatar: henriqueCeImg,
+    markdownPath: "/persona-md/henrique_ce.md",
+    role: "Médico Cardiologista",
+    tagline: "45 anos · Fortaleza/CE · teto R$ 3–3,5 mi",
+    bio: "Cardiologista em Fortaleza, ainda não deu o salto para um imóvel de lazer — pondera custo fixo, uso real e a opinião da esposa antes de decidir.",
+  },
+  {
+    id: "ester_ce",
+    context: "aquiraz",
+    name: "Ester Brandão",
+    initials: "EB",
+    color: "bg-rose-600",
+    age: 45,
+    city: "Fortaleza/CE",
+    occupation: "Empresária — Postos de Combustível",
+    profile: "Casada, 3 filhos",
+    income: "~R$ 500–600k/mês",
+    priceCeiling: "R$ 4–4,4 mi",
+    preferredProduct: "Apartamento resort 3+ suítes, entregue pronto",
+    initialInterest: "ALTO",
+    decisionCriteria: [
+      "Conceito de resort com wellness e profissional fixo",
+      "3 suítes mínimo, 180 m²+",
+      "Varanda gourmet",
+      "Condomínio autossuficiente (mercado, salão, padaria, pet)",
+      "Entregue pronto para morar",
+    ],
+    mainObjections: [
+      "Apartamento abaixo de 3 suítes — fator de exclusão",
+      "Wellness sem profissional fixo — perde apelo",
+      "Entrega sem acabamento — não aceita",
+      "Preço acima de R$ 5 mi",
+    ],
+    suggestedPrompts: [
+      "Como você imagina um fim de semana ideal num apartamento de praia?",
+      "O que te atrai na ideia de um condomínio resort autossuficiente?",
+      "Que experiências de bem-estar você não abre mão?",
+    ],
+    avatar: esterCeImg,
+    markdownPath: "/persona-md/ester_ce.md",
+    role: "Empresária — Postos de Combustível",
+    tagline: "45 anos · Fortaleza/CE · teto R$ 4–4,4 mi",
+    bio: "Empresária do setor de combustíveis, busca um apartamento de praia com conceito de resort e bem-estar, fugindo da rotina urbana de Fortaleza.",
+  },
+  {
+    id: "paula_ce",
+    context: "aquiraz",
+    name: "Paula Drummond",
+    initials: "PD",
+    color: "bg-indigo-600",
+    age: 42,
+    city: "Fortaleza/CE",
+    occupation: "Advogada Imobiliária e Incorporadora",
+    profile: "Casada, 2 filhos",
+    income: "~R$ 300–400k/mês",
+    priceCeiling: "R$ 8–10 mi (planta 350–450 m²)",
+    preferredProduct: "Apartamento 350 m²+ com hall privativo",
+    initialInterest: "ALTO",
+    decisionCriteria: [
+      "Hall privativo + elevador exclusivo por unidade",
+      "Localização Porto das Dunas (fundamento de valorização)",
+      "Taxa de condomínio até R$ 5 mil",
+      "Construtora com histórico comprovado de entrega",
+      "Planta a partir de 350 m²",
+    ],
+    mainObjections: [
+      "Taxa de condomínio acima de R$ 6 mil — rejeita",
+      "Área compartilhada com outro empreendimento — exclusão",
+      "Sem hall privativo — não é o produto que busca",
+      "Itens de lazer sem uso real gerando custo de condomínio",
+    ],
+    suggestedPrompts: [
+      "Como você avalia hoje o potencial de valorização de um imóvel na praia?",
+      "O que te faz confiar (ou desconfiar) do histórico de uma construtora?",
+      "Que diferenciais de projeto justificam pra você uma taxa de condomínio mais alta?",
+    ],
+    avatar: paulaCeImg,
+    markdownPath: "/persona-md/paula_ce.md",
+    role: "Advogada Imobiliária e Incorporadora",
+    tagline: "42 anos · Fortaleza/CE · teto R$ 8–10 mi",
+    bio: "Advogada imobiliária e incorporadora, compra imóvel como investimento — exige fundamento técnico, hall privativo e histórico de entrega comprovado.",
   },
 ];
 

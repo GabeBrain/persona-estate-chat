@@ -3,7 +3,7 @@
 > Etapas realizadas, etapas futuras e milestones do produto.
 > Detalhes técnicos e análise completa em [DESENVOLVIMENTO.md](./DESENVOLVIMENTO.md).
 
-Última atualização: 2026-06-18
+Última atualização: 2026-07-28
 
 Legenda: ✅ concluído · 🔄 em andamento · ⏳ planejado
 
@@ -11,9 +11,9 @@ Legenda: ✅ concluído · 🔄 em andamento · ⏳ planejado
 
 ## Etapas Realizadas ✅
 
-- ✅ **Pesquisa qualitativa** — 19 entrevistas com potenciais compradores (`plaenge-poc/interviews/`).
+- ✅ **Pesquisa qualitativa** — 19 entrevistas com potenciais compradores (transcrições originais removidas em 2026-07-28 junto com a POC legada; síntese já incorporada nas personas).
 - ✅ **Síntese de personas** — 3 personas sintéticas (Renato, Claudia, Rodrigo) com critérios, objeções e prompts.
-- ✅ **POC inicial** — backend Express + frontend React separados (`plaenge-poc/`).
+- ✅ **POC inicial** — backend Express + frontend React separados (removida do disco em 2026-07-28; app atual roda inteiramente via Lovable a partir deste repositório).
 - ✅ **Migração para app principal** — TanStack Start/Router + React 19 + Vite + Tailwind v4.
 - ✅ **API server-side** — `/api/chat` (streaming SSE) e `/api/evaluate` (relatório JSON).
 - ✅ **Chave de API protegida** — movida para `CLAUDE_API_KEY` server-side (não mais hardcoded no cliente).
@@ -25,6 +25,10 @@ Legenda: ✅ concluído · 🔄 em andamento · ⏳ planejado
 - ✅ **Exportar transcrição** em Markdown e modo debug (modelo/tokens).
 - ✅ **Remoção das "Sugestões para começar"** do estado vazio do chat.
 - ✅ **Documentação** — `docs/DESENVOLVIMENTO.md` e `docs/ROADMAP.md`.
+- ✅ **Hardening parcial (M1)** — model id atualizado, `forcedInterest` validado, limite de payload, erros genéricos ao cliente, `saveThreads` com try/catch, banner de erro com dismiss, `ErrorComponent` com stack trace em dev.
+- ✅ **Múltiplos anexos por mensagem** — colar/arrastar/selecionar até 5 imagens (ou PDF) numa mesma mensagem, com miniaturas removíveis individualmente.
+- ✅ **Recuperação automática de cota do localStorage** — ao estourar a cota, remove base64 de anexos de threads antigas (mantendo o texto) e tenta salvar de novo; corrige perda de histórico relatada por usuários.
+- ✅ **Segundo empreendimento (Novo Mandara — Porto das Dunas/CE)** — 4 novas personas (Sérgio, Henrique, Ester, Paula) com campo `context: "aquiraz"`, isoladas das personas PLAENGE (`context: "plaenge"`); seletor agrupado por contexto (`<optgroup>`); troca entre contextos diferentes abre thread nova automaticamente, sem modal.
 
 ---
 
@@ -33,20 +37,24 @@ Legenda: ✅ concluído · 🔄 em andamento · ⏳ planejado
 ### Segurança (prioridade máxima)
 - ⏳ Autenticação nos endpoints `/api/chat` e `/api/evaluate`.
 - ⏳ Rate-limiting por IP/usuário.
-- ⏳ Rotacionar a chave Anthropic exposta no `.env` da POC.
-- ⏳ Validar `forcedInterest` contra lista fechada e limitar tamanho do payload.
-- ⏳ Mensagens de erro genéricas ao cliente; log detalhado só no servidor.
+- ⏳ Rotacionar a chave Anthropic que estava exposta no `.env` da POC legada (o arquivo local foi removido em 2026-07-28, mas isso não invalida a chave — a rotação no console Anthropic ainda não foi feita).
+- ✅ Validar `forcedInterest` contra lista fechada e limitar tamanho do payload.
+- ✅ Mensagens de erro genéricas ao cliente; log detalhado só no servidor.
 
 ### Robustez & Performance
-- ⏳ `try/catch` em `saveThreads` (tratar `QuotaExceededError`).
+- ✅ `try/catch` em `saveThreads` (tratar `QuotaExceededError`; aviso na UI).
+- ✅ `saveThreads` recupera de cota estourada removendo anexos antigos e tentando salvar de novo (não perde mais histórico de texto).
+- ✅ Imagens redimensionadas (máx. 1600px, JPEG 85%) antes do base64, reduzindo o crescimento do localStorage.
 - ⏳ Memoizar `MessageBubble` para evitar re-render da lista no streaming.
-- ⏳ Tirar base64 de anexos do localStorage (IndexedDB ou só metadados).
+- ⏳ Tirar base64 de anexos do localStorage de vez (IndexedDB ou só metadados) — a recuperação automática mitiga, mas não elimina a causa raiz.
 - ⏳ Autoscroll inteligente (só quando perto do fim).
-- ⏳ Atualizar model id para `claude-sonnet-4-6`.
+- ✅ Atualizar model id para `claude-sonnet-4-6`.
 
 ### Produto & UX
-- ⏳ Acessibilidade: `aria-label` em botões só de ícone; navegação por teclado.
-- ⏳ Banner de erro dispensável + feedback de limite de anexo.
+- ⏳ Acessibilidade: revisão completa de `aria-label` e navegação por teclado.
+- ✅ Banner de erro dispensável (botão ✕).
+- ✅ Anexar múltiplas imagens (até 5) numa mesma mensagem, com remoção individual.
+- ⏳ Feedback de limite de anexo ao ultrapassar cota.
 - ⏳ Persona admin: criar/editar personas e prompts sem mexer no código.
 - ⏳ Painel de comparação entre personas e histórico de avaliações.
 
@@ -61,9 +69,17 @@ Legenda: ✅ concluído · 🔄 em andamento · ⏳ planejado
 
 ### M1 — Hardening da POC 🔄
 Tornar a POC atual segura e estável para uso interno/demonstração.
-- Auth + rate-limit nos endpoints, rotação de chave, validação de payload.
-- `try/catch` no storage, memoização, autoscroll inteligente, model id atualizado.
-- **Critério de pronto:** endpoints não abusáveis publicamente e UI sem travamentos conhecidos.
+
+Concluído neste milestone:
+- ✅ `forcedInterest` validado; limite de payload 20 MB; erros genéricos ao cliente.
+- ✅ `saveThreads` com try/catch; banner de erro dispensável; model id `claude-sonnet-4-6`.
+- ✅ `ErrorComponent` exibe stack trace em modo DEV.
+
+Pendente para fechar o M1:
+- ⏳ Auth + rate-limit nos endpoints (maior vetor de abuso).
+- ⏳ Rotação da chave Anthropic exposta no `.env` da POC legada (arquivo removido do disco, chave ainda não rotacionada).
+
+**Critério de pronto:** endpoints não abusáveis publicamente e UI sem travamentos conhecidos.
 
 ### M2 — Qualidade de Produto ⏳
 Elevar a experiência de entrevista e a confiabilidade dos dados.
