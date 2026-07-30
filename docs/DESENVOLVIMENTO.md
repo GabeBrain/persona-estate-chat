@@ -4,7 +4,7 @@
 > análise de performance, UX e segurança do estado atual.
 > Para o histórico de etapas e o planejamento, ver [ROADMAP.md](./ROADMAP.md).
 
-Última atualização: 2026-07-28
+Última atualização: 2026-07-29
 
 ---
 
@@ -43,6 +43,28 @@ cearenses/nordestinos de alto padrão (fontes em `persona/Persona_4..7_*_Aquiraz
 
 As personas do contexto `aquiraz` nunca mencionam PLAENGE, Governador Celso Ramos ou
 Florianópolis — são produtos e mercados deliberadamente isolados.
+
+### Ajuste de naturalidade dos prompts (2026-07-29)
+
+Analistas com experiência em entrevistas identificaram 5 problemas recorrentes nas 7
+personas em testes reais: excesso de perguntas a cada resposta, racionalização excessiva
+(baixa carga emocional), tom "de consultor" em vez de "de consumidor", ausência de
+imprevisibilidade e baixa diferenciação de estilo entre níveis de interesse MÉDIO e
+BAIXO. Todos os 7 arquivos em `src/lib/persona-prompts/*.txt` foram ajustados com duas
+seções novas por persona:
+
+- **NATURALIDADE, EMOÇÃO E IMPREVISIBILIDADE** — instrui a persona a reagir primeiro
+  pela sensação/emoção (não pela lógica), trazer memórias e comparações espontâneas
+  mesmo sem ligação direta com a pergunta, e ocasionalmente desviar do estímulo com um
+  comentário lateral, evitando o tom de "apresentação organizada".
+- **ESTILO CONFORME O INTERESSE ATUAL** — descreve como ALTO/MÉDIO/BAIXO devem mudar
+  visivelmente o tamanho da resposta, a disposição a elaborar e o tom (caloroso/animado
+  vs. econômico/cauteloso vs. curto/distante), para que a diferença entre os níveis seja
+  perceptível na prática, não só no rótulo do campo `interesse`.
+
+A regra de "máximo 1 pergunta por resposta" foi mantida mas reforçada com uma regra de
+frequência: a maioria das respostas não deve terminar em pergunta (no máximo 1 a cada
+3–4 respostas), para reduzir o excesso de perguntas por estímulo.
 
 ---
 

@@ -3,7 +3,7 @@
 > Etapas realizadas, etapas futuras e milestones do produto.
 > Detalhes técnicos e análise completa em [DESENVOLVIMENTO.md](./DESENVOLVIMENTO.md).
 
-Última atualização: 2026-07-28
+Última atualização: 2026-07-29
 
 Legenda: ✅ concluído · 🔄 em andamento · ⏳ planejado
 
@@ -29,6 +29,7 @@ Legenda: ✅ concluído · 🔄 em andamento · ⏳ planejado
 - ✅ **Múltiplos anexos por mensagem** — colar/arrastar/selecionar até 5 imagens (ou PDF) numa mesma mensagem, com miniaturas removíveis individualmente.
 - ✅ **Recuperação automática de cota do localStorage** — ao estourar a cota, remove base64 de anexos de threads antigas (mantendo o texto) e tenta salvar de novo; corrige perda de histórico relatada por usuários.
 - ✅ **Segundo empreendimento (Novo Mandara — Porto das Dunas/CE)** — 4 novas personas (Sérgio, Henrique, Ester, Paula) com campo `context: "aquiraz"`, isoladas das personas PLAENGE (`context: "plaenge"`); seletor agrupado por contexto (`<optgroup>`); troca entre contextos diferentes abre thread nova automaticamente, sem modal.
+- ✅ **Ajuste de naturalidade das 7 personas (2026-07-29)** — correção de 5 críticas de analistas: excesso de perguntas por resposta, racionalização excessiva/baixa carga emocional, tom de consultor em vez de consumidor, ausência de imprevisibilidade e baixa diferenciação de estilo entre interesse MÉDIO e BAIXO. Ver detalhe em DESENVOLVIMENTO.md.
 
 ---
 
