@@ -4,7 +4,7 @@
 > análise de performance, UX e segurança do estado atual.
 > Para o histórico de etapas e o planejamento, ver [ROADMAP.md](./ROADMAP.md).
 
-Última atualização: 2026-07-29
+Última atualização: 2026-07-30
 
 ---
 
@@ -129,8 +129,19 @@ public/persona-md/         ← fichas markdown completas servidas estaticamente
   por envio, configurável via `MAX_ATTACHMENTS` na tela de chat). Cada anexo vira
   um content block (`image`/`document`) independente; o texto digitado (se houver)
   entra como bloco final.
-- Imagens são redimensionadas no cliente (máx. 1600px, JPEG 85%) antes de virar
-  base64, reduzindo o payload enviado à API e o espaço ocupado no `localStorage`.
+- Imagens são sempre reconvertidas para JPEG 85% no cliente (com redimensionamento
+  para no máx. 1600px quando maior) antes de virar base64 — inclusive quando já estão
+  dentro do limite de tamanho, porque screenshots em PNG costumam continuar pesados
+  mesmo em resolução baixa. Isso reduz o payload enviado à API e o espaço no
+  `localStorage`.
+- `toApiMessages()` também limita quantos turnos de anexos são reenviados à API: só os
+  2 turnos mais recentes com anexo mantêm os dados binários; turnos de anexo mais
+  antigos são substituídos por um placeholder de texto antes do envio (o histórico
+  completo continua intacto no `localStorage`/UI). Sem isso, cada requisição a
+  `/api/chat` reenviava a íntegra de todas as imagens já anexadas na thread, e o
+  payload crescia a cada turno até estourar o limite de tamanho de corpo da
+  hospedagem (HTTP 413) — o comportamento não é limitado pelos 20 MB do próprio
+  endpoint, mas por um limite de infraestrutura anterior a ele.
 
 ### Contextos e troca de persona
 
@@ -164,7 +175,8 @@ public/persona-md/         ← fichas markdown completas servidas estaticamente
 | Prioridade | Item | Detalhe / Ação |
 |---|---|---|
 | Alta | **Re-render da lista inteira no streaming** | A cada chunk, todas as mensagens (com `ReactMarkdown`) re-renderizam. Memoizar `MessageBubble` com `React.memo` e `key` estável. |
-| ✅ Mitigado | **base64 de anexos no localStorage** | Imagens são redimensionadas (máx. 1600px, JPEG 85%) antes de virar base64, reduzindo o tamanho por anexo. `saveThreads` agora recupera automaticamente de `QuotaExceededError`: remove o base64 de anexos de threads antigas (mantendo o texto) e tenta salvar de novo antes de desistir — o histórico de texto não é mais perdido quando a cota estoura. Mover para IndexedDB continua pendente para eliminar o problema na raiz. |
+| ✅ Mitigado | **base64 de anexos no localStorage** | Imagens são redimensionadas e reconvertidas para JPEG 85% (máx. 1600px) antes de virar base64, reduzindo o tamanho por anexo. `saveThreads` agora recupera automaticamente de `QuotaExceededError`: remove o base64 de anexos de threads antigas (mantendo o texto) e tenta salvar de novo antes de desistir — o histórico de texto não é mais perdido quando a cota estoura. Mover para IndexedDB continua pendente para eliminar o problema na raiz. |
+| ✅ Corrigido (2026-07-30) | **HTTP 413 com múltiplos anexos ao longo da conversa** | `/api/chat`/`/api/evaluate` reenviavam a íntegra de todos os anexos já feitos na thread a cada novo turno; o payload crescia até estourar o limite de corpo da hospedagem. `toApiMessages()` agora mantém dados binários só nos 2 turnos de anexo mais recentes (mais antigos viram placeholder de texto), e imagens são sempre reconvertidas para JPEG mesmo sem precisar de redimensionamento (screenshots em PNG ficavam grandes mesmo pequenos). |
 | Média | **Autoscroll forçado** | Rola pro fim a cada chunk mesmo quando o usuário rolou pra cima. Só auto-rolar se já estiver perto do fim. |
 | Média | **Bundle inicial** | Muitos `@radix-ui/*` + `recharts` (pesado) nas deps. Lazy-load/code-split o que não é usado nesta tela. |
 | Baixa | **Regex por chunk** | `extractProgressiveFala` roda regex sobre a string acumulada a cada chunk (~O(n²) no total da resposta). Aceitável hoje; revisitar se respostas crescerem. |

@@ -48,9 +48,32 @@ function stripAttachmentData(m: ChatMessage): ChatMessage {
   const textBlock = m.content.find((b) => b.type === "text");
   const text = textBlock && textBlock.type === "text" ? textBlock.text : "";
   const label = m._attachmentNames?.length
-    ? `[Anexo(s) removido(s) por limite de armazenamento: ${m._attachmentNames.join(", ")}]`
-    : "[Anexo removido por limite de armazenamento]";
+    ? `[Anexo(s) não incluído(s) nesta consulta: ${m._attachmentNames.join(", ")}]`
+    : "[Anexo não incluído nesta consulta]";
   return { role: m.role, content: text ? `${label}\n${text}` : label };
+}
+
+const MAX_ATTACHMENT_TURNS_FOR_API = 2;
+
+// Keeps attachment binary data only in the most recent user turns that have
+// them; older attachments are replaced with a text placeholder. Without this,
+// every request to /api/chat resends the full base64 of every image/PDF ever
+// attached in the thread, so the payload keeps growing turn after turn and
+// eventually trips the host's body-size limit (HTTP 413) even though each
+// individual message is small.
+function capAttachmentsForApi(messages: ChatMessage[]): ChatMessage[] {
+  let attachmentTurnsSeen = 0;
+  return messages
+    .slice()
+    .reverse()
+    .map((m) => {
+      if (typeof m.content === "string") return m;
+      const hasAttachment = m.content.some((b) => b.type !== "text");
+      if (!hasAttachment) return m;
+      attachmentTurnsSeen += 1;
+      return attachmentTurnsSeen <= MAX_ATTACHMENT_TURNS_FOR_API ? m : stripAttachmentData(m);
+    })
+    .reverse();
 }
 
 function stripThreadAttachments(t: Thread): Thread {
@@ -139,18 +162,17 @@ function readFileAsDataUrl(file: File): Promise<string> {
 
 const MAX_IMAGE_DIMENSION = 1600;
 
-// Downscales large images before base64-encoding so multiple attachments
-// don't blow up the request payload or localStorage quota as fast.
+// Downscales and re-encodes images as JPEG before base64-encoding so
+// multiple attachments don't blow up the request payload or localStorage
+// quota. Always re-encoding (not just when resizing) matters because
+// screenshots in particular are often PNG and stay large in byte size even
+// well under MAX_IMAGE_DIMENSION.
 function downscaleImageDataUrl(dataUrl: string): Promise<string> {
   return new Promise((resolve) => {
     const img = new Image();
     img.onload = () => {
       const { width, height } = img;
       const scale = Math.min(1, MAX_IMAGE_DIMENSION / Math.max(width, height));
-      if (scale >= 1) {
-        resolve(dataUrl);
-        return;
-      }
       const canvas = document.createElement("canvas");
       canvas.width = Math.round(width * scale);
       canvas.height = Math.round(height * scale);
@@ -182,7 +204,7 @@ export function isValidAttachment(file: File): boolean {
   return file.type.startsWith("image/") || file.type === "application/pdf";
 }
 
-// Strip display-only fields before sending to API
+// Strip display-only fields and cap historical attachments before sending to API
 export function toApiMessages(messages: ChatMessage[]) {
-  return messages.map(({ _attachmentNames: _a, ...rest }) => rest);
+  return capAttachmentsForApi(messages).map(({ _attachmentNames: _a, ...rest }) => rest);
 }

@@ -42,6 +42,13 @@ export const Route = createFileRoute("/persona/$personaId/$threadId")({
 
 const MAX_ATTACHMENTS = 5;
 
+function friendlyApiError(msg: string): string {
+  if (msg === "HTTP 413") {
+    return "Os anexos desta conversa ficaram grandes demais para a API. Remova algum anexo ou envie as imagens em mensagens separadas.";
+  }
+  return msg;
+}
+
 const CONTEXT_LABELS: Record<PersonaContext, string> = {
   plaenge: "PLAENGE — Gov. Celso Ramos/SC",
   aquiraz: "Novo Mandara — Porto das Dunas/CE",
@@ -319,7 +326,7 @@ function ChatPage() {
       const json = (await res.json()) as Evaluation;
       setEvaluation(json);
     } catch (e) {
-      setError("Erro ao gerar avaliação: " + (e as Error).message);
+      setError("Erro ao gerar avaliação: " + friendlyApiError((e as Error).message));
     } finally {
       setEvaluating(false);
     }
@@ -403,7 +410,7 @@ function ChatPage() {
           inputRef.current?.focus();
         },
         onError: (msg) => {
-          setError("Erro na API: " + msg);
+          setError("Erro na API: " + friendlyApiError(msg));
           setStreamingContent("");
           setStreaming(false);
           abortRef.current = null;
