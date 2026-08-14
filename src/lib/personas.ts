@@ -5,10 +5,12 @@ import sergioCeImg from "@/assets/persona-sergio_ce.jpg";
 import henriqueCeImg from "@/assets/persona-henrique_ce.jpg";
 import esterCeImg from "@/assets/persona-ester_ce.jpg";
 import paulaCeImg from "@/assets/persona-paula_ce.jpg";
+import andersonPrudenteImg from "@/assets/persona-anderson_prudente.svg";
+import sergioPrudenteImg from "@/assets/persona-sergio_prudente.svg";
 
 export type InterestLevel = "ALTO" | "MÉDIO" | "BAIXO";
 
-export type PersonaContext = "plaenge" | "aquiraz";
+export type PersonaContext = "plaenge" | "aquiraz" | "prudente";
 
 export type PersonaSummary = {
   id: string;
@@ -301,6 +303,81 @@ export const PERSONAS: PersonaSummary[] = [
     role: "Advogada Imobiliária e Incorporadora",
     tagline: "42 anos · Fortaleza/CE · teto R$ 8–10 mi",
     bio: "Advogada imobiliária e incorporadora, compra imóvel como investimento — exige fundamento técnico, hall privativo e histórico de entrega comprovado.",
+  },
+  {
+    id: "anderson_prudente",
+    context: "prudente",
+    name: "Anderson Ribeiro",
+    initials: "AR",
+    color: "bg-orange-600",
+    age: 43,
+    city: "Presidente Prudente/SP",
+    occupation: "Empresário — Bar-restaurante e Estúdio",
+    profile: "União estável, 1 filha (não coabita)",
+    income: "~R$ 25 mil/mês (variável)",
+    priceCeiling: "R$ 396 mil (lote) + construção",
+    preferredProduct: "Lote + construção",
+    initialInterest: "ALTO",
+    decisionCriteria: [
+      "Primeira casa própria em Prudente (hoje mora de aluguel)",
+      "Localização tranquila e de fácil acesso ao centro",
+      "Lote de 330 m² é suficiente",
+      "Área verde e lazer com espaço infantil, piscina e salão de festas",
+      "Entrada de ~30% + financiamento (ou à vista se vender o outro imóvel)",
+    ],
+    mainObjections: [
+      "Renda variável de negócio próprio — sensível a parcela e prazo",
+      "Agenda corrida — precisa de clareza e praticidade nas condições",
+      "Taxa de condomínio aceitável até uns R$ 600–700",
+    ],
+    suggestedPrompts: [
+      "Como é hoje a sua situação de moradia em Prudente?",
+      "O que pesa mais pra você na hora de escolher onde construir sua casa?",
+      "Como você pensa a forma de pagamento pra uma compra desse tamanho?",
+    ],
+    avatar: andersonPrudenteImg,
+    markdownPath: "/persona-md/prudente/Persona_Prudente_1_Anderson_Ribeiro.md",
+    role: "Empresário — Bar-restaurante e Estúdio",
+    tagline: "43 anos · Presidente Prudente/SP · teto R$ 396 mil (lote)",
+    bio: "Empresário dono de um bar-restaurante e de um estúdio em Presidente Prudente. Mora de aluguel hoje e busca o primeiro imóvel próprio para morar — lote para construir é exatamente o que tinha em mente.",
+  },
+  {
+    id: "sergio_prudente",
+    context: "prudente",
+    name: "Sérgio Marmuro",
+    initials: "SM",
+    color: "bg-teal-700",
+    age: 56,
+    city: "Presidente Prudente/SP",
+    occupation: "Aposentado — gerencia a loja de colchões/sofás do filho",
+    profile: "Casado, filhos adultos (não coabitam)",
+    income: "~R$ 14–15 mil/mês (familiar)",
+    priceCeiling: "~R$ 400 mil (lote)",
+    preferredProduct: "Lote + construção",
+    initialInterest: "ALTO",
+    decisionCriteria: [
+      "Primeira casa em condomínio fechado (hoje mora em casa de rua)",
+      "Segurança como motivador central (desejo da esposa)",
+      "Lote de 330 m² (entre 300–400 m² é o ideal)",
+      "Localização próxima aos Damas, com área verde",
+      "Marca/construtora com reputação local (Dama, Manpei/Funada)",
+    ],
+    mainObjections: [
+      "Teto de preço apertado (~R$ 400 mil no terreno)",
+      "À vista 100% inviável — precisa financiar boa parte",
+      "Sem experiência com taxa de condomínio (estima R$ 400–600)",
+      "Decisão compartilhada com a esposa",
+    ],
+    suggestedPrompts: [
+      "O que te faria sair da casa onde você mora hoje?",
+      "Como é a sua relação com a região dos Damas?",
+      "Como funciona a decisão de comprar um imóvel desses lá em casa?",
+    ],
+    avatar: sergioPrudenteImg,
+    markdownPath: "/persona-md/prudente/Persona_Prudente_2_Sergio_Marmuro.md",
+    role: "Aposentado — gerencia a loja de colchões/sofás do filho",
+    tagline: "56 anos · Presidente Prudente/SP · teto ~R$ 400 mil (lote)",
+    bio: "Aposentado que ainda ajuda na loja do filho, mora em casa própria de rua no centro de Prudente. A esposa quer mais segurança e ele avalia, pela primeira vez, um condomínio fechado.",
   },
 ];
 

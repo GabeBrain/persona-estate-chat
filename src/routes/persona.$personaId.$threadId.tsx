@@ -52,8 +52,9 @@ function friendlyApiError(msg: string): string {
 const CONTEXT_LABELS: Record<PersonaContext, string> = {
   plaenge: "PLAENGE — Gov. Celso Ramos/SC",
   aquiraz: "Novo Mandara — Porto das Dunas/CE",
+  prudente: "Presidente Prudente — Horizontal",
 };
-const CONTEXT_ORDER: PersonaContext[] = ["plaenge", "aquiraz"];
+const CONTEXT_ORDER: PersonaContext[] = ["plaenge", "aquiraz", "prudente"];
 
 // --- JSON parsing helpers (mirror POC) -----------------------------
 
@@ -645,6 +646,13 @@ function ChatPage() {
             <p className="text-xs text-stone-500">
               <span className="font-medium text-stone-700">Empreendimento:</span>{" "}
               Novo Mandara · Apartamento vertical resort · Porto das Dunas/CE
+            </p>
+          )}
+
+          {persona.context === "prudente" && (
+            <p className="text-xs text-stone-500">
+              <span className="font-medium text-stone-700">Empreendimento:</span>{" "}
+              Condomínio horizontal de lotes · Região dos Damas · Presidente Prudente/SP
             </p>
           )}
 
