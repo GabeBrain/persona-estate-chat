@@ -29,7 +29,8 @@ Legenda: ✅ concluído · 🔄 em andamento · ⏳ planejado
 - ✅ **Múltiplos anexos por mensagem** — colar/arrastar/selecionar até 5 imagens (ou PDF) numa mesma mensagem, com miniaturas removíveis individualmente.
 - ✅ **Recuperação automática de cota do localStorage** — ao estourar a cota, remove base64 de anexos de threads antigas (mantendo o texto) e tenta salvar de novo; corrige perda de histórico relatada por usuários.
 - ✅ **Segundo empreendimento (Novo Mandara — Porto das Dunas/CE)** — 4 novas personas (Sérgio, Henrique, Ester, Paula) com campo `context: "aquiraz"`, isoladas das personas PLAENGE (`context: "plaenge"`); seletor agrupado por contexto (`<optgroup>`); troca entre contextos diferentes abre thread nova automaticamente, sem modal.
-- ✅ **Ajuste de naturalidade das 7 personas (2026-07-29)** — correção de 5 críticas de analistas: excesso de perguntas por resposta, racionalização excessiva/baixa carga emocional, tom de consultor em vez de consumidor, ausência de imprevisibilidade e baixa diferenciação de estilo entre interesse MÉDIO e BAIXO. Ver detalhe em DESENVOLVIMENTO.md.
+- ✅ **Terceiro contexto (Presidente Prudente/SP)** — 2 novas personas (Anderson Ribeiro e Sérgio Marmuro) com campo `context: "prudente"`, prompts e fichas markdown próprias, agrupadas no seletor de personas.
+- ✅ **Ajuste de naturalidade das 7 personas existentes à época (2026-07-29)** — correção de 5 críticas de analistas: excesso de perguntas por resposta, racionalização excessiva/baixa carga emocional, tom de consultor em vez de consumidor, ausência de imprevisibilidade e baixa diferenciação de estilo entre interesse MÉDIO e BAIXO. Ver detalhe em DESENVOLVIMENTO.md.
 - ✅ **Correção do HTTP 413 com múltiplos anexos (2026-07-30)** — imagens são sempre reconvertidas para JPEG (mesmo sem precisar de redimensionamento) e `/api/chat`/`/api/evaluate` só recebem os anexos binários dos 2 turnos mais recentes da thread, evitando que o payload cresça a cada turno até estourar o limite de corpo da hospedagem.
 
 ---
@@ -37,8 +38,8 @@ Legenda: ✅ concluído · 🔄 em andamento · ⏳ planejado
 ## Etapas Futuras ⏳
 
 ### Segurança (prioridade máxima)
-- ⏳ Autenticação nos endpoints `/api/chat` e `/api/evaluate`.
-- ⏳ Rate-limiting por IP/usuário.
+- ✅ Rate-limiting em memória por IP/rota nos endpoints `/api/chat` e `/api/evaluate`.
+- 🔄 Autenticação simples por token opcional (`PERSONA_API_TOKEN` + header `X-Persona-Api-Token`) implementada; ainda falta autenticação real por sessão/usuário.
 - ⏳ Rotacionar a chave Anthropic que estava exposta no `.env` da POC legada (o arquivo local foi removido em 2026-07-28, mas isso não invalida a chave — a rotação no console Anthropic ainda não foi feita).
 - ✅ Validar `forcedInterest` contra lista fechada e limitar tamanho do payload.
 - ✅ Mensagens de erro genéricas ao cliente; log detalhado só no servidor.
@@ -78,10 +79,10 @@ Concluído neste milestone:
 - ✅ `ErrorComponent` exibe stack trace em modo DEV.
 
 Pendente para fechar o M1:
-- ⏳ Auth + rate-limit nos endpoints (maior vetor de abuso).
+- 🔄 Auth + rate-limit nos endpoints: mitigação inicial entregue com token opcional e rate-limit em memória; falta login/sessão para fechar o risco em produção.
 - ⏳ Rotação da chave Anthropic exposta no `.env` da POC legada (arquivo removido do disco, chave ainda não rotacionada).
 
-**Critério de pronto:** endpoints não abusáveis publicamente e UI sem travamentos conhecidos.
+**Critério de pronto:** endpoints protegidos por autenticação real/sessão em produção e UI sem travamentos conhecidos.
 
 ### M2 — Qualidade de Produto ⏳
 Elevar a experiência de entrevista e a confiabilidade dos dados.

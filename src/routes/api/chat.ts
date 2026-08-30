@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import Anthropic from "@anthropic-ai/sdk";
 import type { MessageParam } from "@anthropic-ai/sdk/resources/messages";
+import { guardApiRequest } from "@/lib/api-guard.server";
 import { getSystemPrompt } from "@/lib/personas.server";
 
 type ChatBody = {
@@ -17,6 +18,9 @@ export const Route = createFileRoute("/api/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const guardResponse = guardApiRequest(request);
+        if (guardResponse) return guardResponse;
+
         const contentLength = Number(request.headers.get("content-length") ?? 0);
         if (contentLength > MAX_BODY_BYTES) {
           return new Response("Payload too large", { status: 413 });
@@ -29,9 +33,12 @@ export const Route = createFileRoute("/api/chat")({
           return new Response("Invalid JSON", { status: 400 });
         }
         const { personaId, messages } = body;
-        const forcedInterest = body.forcedInterest != null
-          ? (VALID_INTEREST.has(body.forcedInterest) ? body.forcedInterest : null)
-          : null;
+        const forcedInterest =
+          body.forcedInterest != null
+            ? VALID_INTEREST.has(body.forcedInterest)
+              ? body.forcedInterest
+              : null
+            : null;
 
         if (!personaId || !Array.isArray(messages) || messages.length === 0) {
           return new Response("personaId and messages are required", { status: 400 });
@@ -64,10 +71,7 @@ export const Route = createFileRoute("/api/chat")({
               let inputTokens = 0;
               let outputTokens = 0;
               for await (const event of mStream) {
-                if (
-                  event.type === "content_block_delta" &&
-                  event.delta.type === "text_delta"
-                ) {
+                if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
                   send({ type: "text", text: event.delta.text });
                 } else if (event.type === "message_start") {
                   inputTokens = event.message.usage?.input_tokens ?? 0;

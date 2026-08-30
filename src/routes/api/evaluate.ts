@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import Anthropic from "@anthropic-ai/sdk";
 import type { MessageParam } from "@anthropic-ai/sdk/resources/messages";
+import { guardApiRequest } from "@/lib/api-guard.server";
 import { getSystemPrompt } from "@/lib/personas.server";
 
 type EvalBody = { personaId?: string; messages?: MessageParam[] };
@@ -22,6 +23,9 @@ export const Route = createFileRoute("/api/evaluate")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const guardResponse = guardApiRequest(request);
+        if (guardResponse) return guardResponse;
+
         const contentLength = Number(request.headers.get("content-length") ?? 0);
         if (contentLength > MAX_BODY_BYTES) {
           return new Response("Payload too large", { status: 413 });
@@ -60,7 +64,10 @@ export const Route = createFileRoute("/api/evaluate")({
           const block = response.content[0];
           const raw =
             block.type === "text"
-              ? block.text.trim().replace(/^```json\n?/, "").replace(/\n?```$/, "")
+              ? block.text
+                  .trim()
+                  .replace(/^```json\n?/, "")
+                  .replace(/\n?```$/, "")
               : "";
           const json = JSON.parse(raw);
           return Response.json(json);

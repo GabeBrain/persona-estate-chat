@@ -11,8 +11,8 @@
 ## 1. Visão Geral
 
 POC de **entrevista simulada com personas sintéticas** de potenciais compradores
-imobiliários. O app hoje cobre **dois empreendimentos/contextos** distintos — cada
-persona pertence a um `context` (`plaenge` ou `aquiraz`) que determina o produto e a
+imobiliários. O app hoje cobre **três empreendimentos/contextos** distintos — cada
+persona pertence a um `context` (`plaenge`, `aquiraz` ou `prudente`) que determina o produto e a
 localização sobre os quais ela fala. O entrevistador conversa com uma persona movida
 por Claude, que mantém um **nível de interesse dinâmico** (ALTO/MÉDIO/BAIXO) e gera,
 ao final, um **relatório de avaliação** estruturado.
@@ -44,13 +44,22 @@ cearenses/nordestinos de alto padrão (fontes em `persona/Persona_4..7_*_Aquiraz
 As personas do contexto `aquiraz` nunca mencionam PLAENGE, Governador Celso Ramos ou
 Florianópolis — são produtos e mercados deliberadamente isolados.
 
+**Contexto `prudente`** — loteamento horizontal em Presidente Prudente/SP, sintetizado
+a partir de entrevistas com compradores locais buscando primeira casa em condomínio
+fechado:
+
+| ID | Nome | Perfil | Interesse inicial |
+|---|---|---|---|
+| `anderson_prudente` | Anderson Ribeiro (43, Presidente Prudente) | Empresário, primeira casa própria, lote + construção | ALTO |
+| `sergio_prudente` | Sérgio Marmuro (56, Presidente Prudente) | Aposentado/gestor de loja familiar, busca segurança em condomínio | ALTO |
+
 ### Ajuste de naturalidade dos prompts (2026-07-29)
 
 Analistas com experiência em entrevistas identificaram 5 problemas recorrentes nas 7
-personas em testes reais: excesso de perguntas a cada resposta, racionalização excessiva
+personas existentes à época em testes reais: excesso de perguntas a cada resposta, racionalização excessiva
 (baixa carga emocional), tom "de consultor" em vez de "de consumidor", ausência de
 imprevisibilidade e baixa diferenciação de estilo entre níveis de interesse MÉDIO e
-BAIXO. Todos os 7 arquivos em `src/lib/persona-prompts/*.txt` foram ajustados com duas
+BAIXO. Todos os 7 arquivos de prompt existentes à época em `src/lib/persona-prompts/*.txt` foram ajustados com duas
 seções novas por persona:
 
 - **NATURALIDADE, EMOÇÃO E IMPREVISIBILIDADE** — instrui a persona a reagir primeiro
@@ -84,7 +93,7 @@ src/
 ├── lib/
 │   ├── personas.ts        ← metadados das personas (client-safe), incl. campo `context`
 │   ├── personas.server.ts ← carrega system prompts (.txt) — server only
-│   ├── persona-prompts/   ← renato.txt | claudia.txt | rodrigo.txt | sergio_ce.txt | henrique_ce.txt | ester_ce.txt | paula_ce.txt
+│   ├── persona-prompts/   ← renato.txt | claudia.txt | rodrigo.txt | sergio_ce.txt | henrique_ce.txt | ester_ce.txt | paula_ce.txt | anderson_prudente.txt | sergio_prudente.txt
 │   └── chat-storage.ts    ← persistência de threads em localStorage
 └── assets/                ← avatares das personas
 public/persona-md/         ← fichas markdown completas servidas estaticamente
@@ -145,7 +154,7 @@ public/persona-md/         ← fichas markdown completas servidas estaticamente
 
 ### Contextos e troca de persona
 
-- Cada persona tem um `context` (`"plaenge"` | `"aquiraz"`); o seletor no header agrupa
+- Cada persona tem um `context` (`"plaenge"` | `"aquiraz"` | `"prudente"`); o seletor no header agrupa
   as personas por contexto usando `<optgroup>`.
 - Ao trocar de persona **dentro do mesmo contexto**, o comportamento é o de sempre:
   navega para `/persona/$personaId` e reaproxima a thread mais recente dessa persona
@@ -174,7 +183,7 @@ public/persona-md/         ← fichas markdown completas servidas estaticamente
 
 | Prioridade | Item | Detalhe / Ação |
 |---|---|---|
-| Alta | **Re-render da lista inteira no streaming** | A cada chunk, todas as mensagens (com `ReactMarkdown`) re-renderizam. Memoizar `MessageBubble` com `React.memo` e `key` estável. |
+| Alta | **Re-render da lista inteira no streaming** | A cada chunk, a área de mensagens re-renderiza. Memoizar `MessageBubble` com `React.memo` e trocar `key={i}` por chave estável. |
 | ✅ Mitigado | **base64 de anexos no localStorage** | Imagens são redimensionadas e reconvertidas para JPEG 85% (máx. 1600px) antes de virar base64, reduzindo o tamanho por anexo. `saveThreads` agora recupera automaticamente de `QuotaExceededError`: remove o base64 de anexos de threads antigas (mantendo o texto) e tenta salvar de novo antes de desistir — o histórico de texto não é mais perdido quando a cota estoura. Mover para IndexedDB continua pendente para eliminar o problema na raiz. |
 | ✅ Corrigido (2026-07-30) | **HTTP 413 com múltiplos anexos ao longo da conversa** | `/api/chat`/`/api/evaluate` reenviavam a íntegra de todos os anexos já feitos na thread a cada novo turno; o payload crescia até estourar o limite de corpo da hospedagem. `toApiMessages()` agora mantém dados binários só nos 2 turnos de anexo mais recentes (mais antigos viram placeholder de texto), e imagens são sempre reconvertidas para JPEG mesmo sem precisar de redimensionamento (screenshots em PNG ficavam grandes mesmo pequenos). |
 | Média | **Autoscroll forçado** | Rola pro fim a cada chunk mesmo quando o usuário rolou pra cima. Só auto-rolar se já estiver perto do fim. |
@@ -187,7 +196,7 @@ public/persona-md/         ← fichas markdown completas servidas estaticamente
 
 | Severidade | Item | Detalhe / Mitigação |
 |---|---|---|
-| 🔴 Alta | **Endpoints sem auth nem rate-limit** | `/api/chat` e `/api/evaluate` são públicos — qualquer um com a URL consome créditos Anthropic. Adicionar autenticação (token/sessão) + rate-limiting por IP. |
+| 🟡 Mitigado | **Endpoints sem auth forte** | `/api/chat` e `/api/evaluate` agora passam por rate-limit em memória por IP/rota e aceitam bloqueio por token quando `PERSONA_API_TOKEN` está definido. O cliente envia `X-Persona-Api-Token` quando `VITE_PERSONA_API_TOKEN` existe. Isso reduz abuso casual, mas ainda não substitui autenticação real por sessão/usuário. |
 | 🔴 Alta | **Chave real exposta (histórico)** | O `.env` da POC Express legada (`plaenge-poc/backend/.env`, fora deste repositório) tinha uma chave Anthropic real em texto puro. O arquivo local foi removido em 2026-07-28, mas isso **não revoga a chave** — ainda **falta revogar/rotacionar** no console Anthropic. |
 | ✅ Resolvido | **Sem limite de tamanho de payload** | Limite de 20 MB adicionado em ambos os endpoints; JSON inválido retorna 400. |
 | ✅ Resolvido | **`forcedInterest` sem validação** | Validado contra `["ALTO","MÉDIO","BAIXO"]`; valores inválidos são ignorados (tratados como `null`). |
@@ -213,6 +222,11 @@ public/persona-md/         ← fichas markdown completas servidas estaticamente
 # na raiz do projeto
 npm install
 echo "CLAUDE_API_KEY=sk-ant-..." > .env   # chave da Anthropic
+# opcional, recomendado em ambientes publicados:
+# PERSONA_API_TOKEN=um-token-forte
+# VITE_PERSONA_API_TOKEN=mesmo-token
+# PERSONA_RATE_LIMIT_MAX=30
+# PERSONA_RATE_LIMIT_WINDOW_MS=60000
 npm run dev
 ```
 

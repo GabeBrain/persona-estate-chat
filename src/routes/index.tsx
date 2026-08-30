@@ -1,16 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import brainLogo from "@/assets/logo-brain.png";
 import { PERSONAS } from "@/lib/personas";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Vozes do Mercado — Personas Imobiliárias" },
+      { title: "Personas Sintéticas Brain" },
       {
         name: "description",
         content:
-          "Converse com personas sintéticas baseadas em entrevistas qualitativas reais do mercado imobiliário.",
+          "Converse com personas sintéticas Brain baseadas em entrevistas qualitativas reais do mercado imobiliário.",
       },
-      { property: "og:title", content: "Vozes do Mercado — Personas Imobiliárias" },
+      { property: "og:title", content: "Personas Sintéticas Brain" },
       {
         property: "og:description",
         content:
@@ -23,16 +24,16 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <div className="min-h-screen bg-stone-50">
-      <header className="border-b border-stone-200/80 bg-white/60 backdrop-blur">
+    <div className="min-h-screen bg-background">
+      <header className="border-b border-border bg-card/85 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-          <div className="flex items-center gap-2">
-            <div className="h-2.5 w-2.5 rounded-full bg-emerald-700" />
-            <span className="text-sm font-medium tracking-wide text-stone-900">
-              Vozes do Mercado
+          <div className="flex items-center gap-3">
+            <img src={brainLogo} alt="Brain" className="h-7 w-auto" />
+            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              Personas Sintéticas
             </span>
           </div>
-          <span className="text-xs uppercase tracking-widest text-stone-500">
+          <span className="text-xs uppercase tracking-widest text-muted-foreground">
             Pesquisa Imobiliária
           </span>
         </div>
@@ -40,28 +41,28 @@ function Index() {
 
       <main className="mx-auto max-w-6xl px-6 py-14">
         <section className="max-w-2xl">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-emerald-800">
-            Personas sintéticas
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+            Personas Sintéticas Brain
           </p>
-          <h1 className="mt-3 font-serif text-4xl leading-tight text-stone-900 sm:text-5xl">
+          <h1 className="mt-3 text-4xl font-semibold leading-tight text-foreground sm:text-5xl">
             Converse com quem move o mercado imobiliário.
           </h1>
-          <p className="mt-4 text-base leading-relaxed text-stone-600">
-            Cada persona abaixo foi modelada a partir de entrevistas qualitativas reais.
-            Faça perguntas abertas, valide hipóteses de produto, explore dores e
-            necessidades — como em uma entrevista de pesquisa.
+          <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+            Cada persona abaixo foi modelada a partir de entrevistas qualitativas reais. Faça
+            perguntas abertas, valide hipóteses de produto, explore dores e necessidades como em uma
+            entrevista de pesquisa.
           </p>
         </section>
 
-        <section className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <section className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {PERSONAS.map((p) => (
             <Link
               key={p.id}
               to="/persona/$personaId"
               params={{ personaId: p.id }}
-              className="group relative overflow-hidden rounded-2xl border border-stone-200 bg-white transition hover:-translate-y-0.5 hover:shadow-lg"
+              className="group relative overflow-hidden rounded-xl border border-border bg-card transition hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-sm"
             >
-              <div className="relative h-48 bg-stone-100">
+              <div className="relative h-44 bg-muted">
                 <img
                   src={p.avatar}
                   alt={p.name}
@@ -70,15 +71,13 @@ function Index() {
                 />
               </div>
               <div className="space-y-2 p-5">
-                <h2 className="font-serif text-xl text-stone-900">{p.name}</h2>
-                <p className="text-xs uppercase tracking-wider text-emerald-800">
-                  {p.role}
-                </p>
-                <p className="text-xs text-stone-500">{p.tagline}</p>
-                <p className="pt-2 text-sm leading-relaxed text-stone-600 line-clamp-3">
+                <h2 className="text-xl font-semibold text-foreground">{p.name}</h2>
+                <p className="text-xs uppercase tracking-wider text-primary">{p.role}</p>
+                <p className="text-xs text-muted-foreground">{p.tagline}</p>
+                <p className="line-clamp-3 pt-2 text-sm leading-relaxed text-muted-foreground">
                   {p.bio}
                 </p>
-                <div className="pt-3 text-sm font-medium text-stone-900 group-hover:text-emerald-800">
+                <div className="pt-3 text-sm font-semibold text-foreground group-hover:text-primary">
                   Iniciar conversa →
                 </div>
               </div>
@@ -86,7 +85,7 @@ function Index() {
           ))}
         </section>
 
-        <footer className="mt-20 border-t border-stone-200 pt-6 text-xs text-stone-500">
+        <footer className="mt-20 border-t border-border pt-6 text-xs text-muted-foreground">
           Histórico de conversas salvo neste navegador.
         </footer>
       </main>

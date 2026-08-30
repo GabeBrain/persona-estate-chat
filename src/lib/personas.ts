@@ -1,10 +1,10 @@
-import renatoImg from "@/assets/persona-renato.jpg";
-import claudiaImg from "@/assets/persona-claudia.jpg";
-import rodrigoImg from "@/assets/persona-rodrigo.jpg";
-import sergioCeImg from "@/assets/persona-sergio_ce.jpg";
-import henriqueCeImg from "@/assets/persona-henrique_ce.jpg";
-import esterCeImg from "@/assets/persona-ester_ce.jpg";
-import paulaCeImg from "@/assets/persona-paula_ce.jpg";
+import renatoImg from "@/assets/persona-avatar-renato.svg";
+import claudiaImg from "@/assets/persona-avatar-claudia.svg";
+import rodrigoImg from "@/assets/persona-avatar-rodrigo.svg";
+import sergioCeImg from "@/assets/persona-avatar-sergio-ce.svg";
+import henriqueCeImg from "@/assets/persona-avatar-henrique.svg";
+import esterCeImg from "@/assets/persona-avatar-ester.svg";
+import paulaCeImg from "@/assets/persona-avatar-paula.svg";
 import andersonPrudenteImg from "@/assets/persona-anderson_prudente.svg";
 import sergioPrudenteImg from "@/assets/persona-sergio_prudente.svg";
 

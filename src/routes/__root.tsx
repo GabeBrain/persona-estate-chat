@@ -84,23 +84,46 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "personaBrain" },
+      { title: "Personas Sintéticas Brain" },
       {
         name: "description",
         content:
-          "Personas sintéticas baseadas em entrevistas qualitativas do mercado imobiliário.",
+          "Personas sintéticas Brain baseadas em entrevistas qualitativas do mercado imobiliário.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { property: "og:title", content: "personaBrain" },
-      { name: "twitter:title", content: "personaBrain" },
-      { name: "description", content: "Imóvel AI Companion offers AI-powered conversations for the real estate market." },
-      { property: "og:description", content: "Imóvel AI Companion offers AI-powered conversations for the real estate market." },
-      { name: "twitter:description", content: "Imóvel AI Companion offers AI-powered conversations for the real estate market." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/337891e4-bf56-44fd-a7a7-d0c433507d51/id-preview-44d17e60--d66b4485-9165-4595-8435-04c408aa6e73.lovable.app-1781805609388.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/337891e4-bf56-44fd-a7a7-d0c433507d51/id-preview-44d17e60--d66b4485-9165-4595-8435-04c408aa6e73.lovable.app-1781805609388.png" },
+      { property: "og:title", content: "Personas Sintéticas Brain" },
+      { name: "twitter:title", content: "Personas Sintéticas Brain" },
+      {
+        name: "description",
+        content: "Personas sintéticas Brain para entrevistas simuladas no mercado imobiliário.",
+      },
+      {
+        property: "og:description",
+        content: "Personas sintéticas Brain para entrevistas simuladas no mercado imobiliário.",
+      },
+      {
+        name: "twitter:description",
+        content: "Personas sintéticas Brain para entrevistas simuladas no mercado imobiliário.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/337891e4-bf56-44fd-a7a7-d0c433507d51/id-preview-44d17e60--d66b4485-9165-4595-8435-04c408aa6e73.lovable.app-1781805609388.png",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/337891e4-bf56-44fd-a7a7-d0c433507d51/id-preview-44d17e60--d66b4485-9165-4595-8435-04c408aa6e73.lovable.app-1781805609388.png",
+      },
     ],
     links: [
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Montserrat:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap",
+      },
       {
         rel: "stylesheet",
         href: appCss,
@@ -115,7 +138,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <head>
         <HeadContent />
       </head>
