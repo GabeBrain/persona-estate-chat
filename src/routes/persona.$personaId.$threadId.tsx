@@ -520,7 +520,7 @@ function ChatPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background text-muted-foreground">
         Persona não encontrada.{" "}
-        <Link to="/" className="ml-2 underline">
+        <Link to="/" search={{ city: undefined }} className="ml-2 underline">
           voltar
         </Link>
       </div>
@@ -541,6 +541,7 @@ function ChatPage() {
           </button>
           <Link
             to="/"
+            search={{ city: undefined }}
             className="hidden items-center gap-2 text-muted-foreground hover:text-foreground sm:flex"
           >
             <ArrowLeft className="h-4 w-4" />
