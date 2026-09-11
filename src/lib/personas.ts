@@ -7,10 +7,10 @@ import esterCeImg from "@/assets/persona-ester_ce.jpg";
 import paulaCeImg from "@/assets/persona-paula_ce.jpg";
 import andersonPrudenteImg from "@/assets/persona-anderson_prudente.jpg";
 import sergioPrudenteImg from "@/assets/persona-sergio_prudente.jpg";
-import gilmarImg from "@/assets/persona-avatar-gilmar.svg";
-import thiagoImg from "@/assets/persona-avatar-thiago.svg";
-import andreImg from "@/assets/persona-avatar-andre.svg";
-import viniciusImg from "@/assets/persona-avatar-vinicius.svg";
+import gilmarImg from "@/assets/persona-gilmar.jpg.asset.json";
+import thiagoImg from "@/assets/persona-thiago.jpg.asset.json";
+import andreImg from "@/assets/persona-andre.jpg.asset.json";
+import viniciusImg from "@/assets/persona-vinicius.jpg.asset.json";
 
 export type InterestLevel = "ALTO" | "MÉDIO" | "BAIXO";
 
@@ -414,7 +414,7 @@ export const PERSONAS: PersonaSummary[] = [
       "O que mais pesa pra você na hora de escolher um lote de campo?",
       "Como você pensa a forma de pagamento de uma compra desse porte?",
     ],
-    avatar: gilmarImg,
+    avatar: gilmarImg.url,
     markdownPath: "/persona-md/campo_alegre/Persona_CampoAlegre_1_Gilmar_Novak.md",
     role: "Representante Comercial e Consultor de Varejo",
     tagline: "43 anos · Curitiba/PR · teto ~R$ 2 mi (lote)",
@@ -451,7 +451,7 @@ export const PERSONAS: PersonaSummary[] = [
       "O que vocês fazem hoje pra desconectar da rotina da cidade?",
       "Como você pensaria a forma de pagamento pra um lote desses?",
     ],
-    avatar: thiagoImg,
+    avatar: thiagoImg.url,
     markdownPath: "/persona-md/campo_alegre/Persona_CampoAlegre_2_Thiago_Teodoro.md",
     role: "Empresário — Salão de Beleza e Influenciador",
     tagline: "35 anos · Curitiba/PR · teto ~R$ 1,9 mi (lote)",
@@ -489,7 +489,7 @@ export const PERSONAS: PersonaSummary[] = [
       "O que você acha decisivo na hora de escolher onde investir em lotes?",
       "Como você pensaria a forma de pagamento pra esse tipo de compra?",
     ],
-    avatar: andreImg,
+    avatar: andreImg.url,
     markdownPath: "/persona-md/alta_floresta/Persona_AltaFloresta_1_Andre_Bordignon.md",
     role: "Engenheiro Civil — Obra Pública e Investimentos",
     tagline: "33 anos · Alta Floresta/MT · teto ~R$ 1.000/m² (lote)",
@@ -526,7 +526,7 @@ export const PERSONAS: PersonaSummary[] = [
       "O que você acha indispensável em segurança num condomínio fechado?",
       "Você compraria um lote como esse?",
     ],
-    avatar: viniciusImg,
+    avatar: viniciusImg.url,
     markdownPath: "/persona-md/alta_floresta/Persona_AltaFloresta_2_Vinicius_Queiroz.md",
     role: "Engenheiro Civil — Construção e Venda (mercado popular)",
     tagline: "27 anos · Alta Floresta/MT · teto R$ 1.200/m² (lote)",

@@ -3,7 +3,7 @@
 > Etapas realizadas, etapas futuras e milestones do produto.
 > Detalhes técnicos e análise completa em [DESENVOLVIMENTO.md](./DESENVOLVIMENTO.md).
 
-Última atualização: 2026-07-30
+Última atualização: 2026-09-11
 
 Legenda: ✅ concluído · 🔄 em andamento · ⏳ planejado
 
@@ -32,6 +32,7 @@ Legenda: ✅ concluído · 🔄 em andamento · ⏳ planejado
 - ✅ **Terceiro contexto (Presidente Prudente/SP)** — 2 novas personas (Anderson Ribeiro e Sérgio Marmuro) com campo `context: "prudente"`, prompts e fichas markdown próprias, agrupadas no seletor de personas.
 - ✅ **Ajuste de naturalidade das 7 personas existentes à época (2026-07-29)** — correção de 5 críticas de analistas: excesso de perguntas por resposta, racionalização excessiva/baixa carga emocional, tom de consultor em vez de consumidor, ausência de imprevisibilidade e baixa diferenciação de estilo entre interesse MÉDIO e BAIXO. Ver detalhe em DESENVOLVIMENTO.md.
 - ✅ **Correção do HTTP 413 com múltiplos anexos (2026-07-30)** — imagens são sempre reconvertidas para JPEG (mesmo sem precisar de redimensionamento) e `/api/chat`/`/api/evaluate` só recebem os anexos binários dos 2 turnos mais recentes da thread, evitando que o payload cresça a cada turno até estourar o limite de corpo da hospedagem.
+- ✅ **Galeria por cidade e retratos realistas (2026-09-11)** — filtro de cidade compartilhável pela URL e substituição das quatro ilustrações mais recentes por retratos fotorrealistas.
 
 ---
 
