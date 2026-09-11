@@ -7,10 +7,10 @@ import esterCeImg from "@/assets/persona-ester_ce.jpg";
 import paulaCeImg from "@/assets/persona-paula_ce.jpg";
 import andersonPrudenteImg from "@/assets/persona-anderson_prudente.jpg";
 import sergioPrudenteImg from "@/assets/persona-sergio_prudente.jpg";
-import gilmarImg from "@/assets/persona-avatar-gilmar.svg";
-import thiagoImg from "@/assets/persona-avatar-thiago.svg";
-import andreImg from "@/assets/persona-avatar-andre.svg";
-import viniciusImg from "@/assets/persona-avatar-vinicius.svg";
+import gilmarImg from "@/assets/persona-gilmar.jpg";
+import thiagoImg from "@/assets/persona-thiago.jpg";
+import andreImg from "@/assets/persona-andre.jpg";
+import viniciusImg from "@/assets/persona-vinicius.jpg";
 
 export type InterestLevel = "ALTO" | "MÉDIO" | "BAIXO";
 
