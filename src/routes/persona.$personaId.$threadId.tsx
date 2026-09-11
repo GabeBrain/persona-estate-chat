@@ -54,8 +54,16 @@ const CONTEXT_LABELS: Record<PersonaContext, string> = {
   plaenge: "PLAENGE — Gov. Celso Ramos/SC",
   aquiraz: "Novo Mandara — Porto das Dunas/CE",
   prudente: "Presidente Prudente — Horizontal",
+  campo_alegre: "Monte Sereno — Campo Alegre/SC",
+  alta_floresta: "Grupo Almeida Prado — Alta Floresta/MT",
 };
-const CONTEXT_ORDER: PersonaContext[] = ["plaenge", "aquiraz", "prudente"];
+const CONTEXT_ORDER: PersonaContext[] = [
+  "plaenge",
+  "aquiraz",
+  "prudente",
+  "campo_alegre",
+  "alta_floresta",
+];
 
 // --- JSON parsing helpers (mirror POC) -----------------------------
 
@@ -679,6 +687,20 @@ function ChatPage() {
             <p className="text-xs text-muted-foreground">
               <span className="font-medium text-foreground">Empreendimento:</span> Condomínio
               horizontal de lotes · Região dos Damas · Presidente Prudente/SP
+            </p>
+          )}
+
+          {persona.context === "campo_alegre" && (
+            <p className="text-xs text-muted-foreground">
+              <span className="font-medium text-foreground">Empreendimento:</span> Condomínio
+              Monte Sereno · Lotes de campo · Campo Alegre/SC
+            </p>
+          )}
+
+          {persona.context === "alta_floresta" && (
+            <p className="text-xs text-muted-foreground">
+              <span className="font-medium text-foreground">Empreendimento:</span> Grupo Almeida
+              Prado · Lotes de alto padrão · Jardim Santa Cecília · Alta Floresta/MT
             </p>
           )}
 

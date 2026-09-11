@@ -7,10 +7,14 @@ import esterCeImg from "@/assets/persona-ester_ce.jpg";
 import paulaCeImg from "@/assets/persona-paula_ce.jpg";
 import andersonPrudenteImg from "@/assets/persona-anderson_prudente.jpg";
 import sergioPrudenteImg from "@/assets/persona-sergio_prudente.jpg";
+import gilmarImg from "@/assets/persona-avatar-gilmar.svg";
+import thiagoImg from "@/assets/persona-avatar-thiago.svg";
+import andreImg from "@/assets/persona-avatar-andre.svg";
+import viniciusImg from "@/assets/persona-avatar-vinicius.svg";
 
 export type InterestLevel = "ALTO" | "MÉDIO" | "BAIXO";
 
-export type PersonaContext = "plaenge" | "aquiraz" | "prudente";
+export type PersonaContext = "plaenge" | "aquiraz" | "prudente" | "campo_alegre" | "alta_floresta";
 
 export type PersonaSummary = {
   id: string;
@@ -378,6 +382,155 @@ export const PERSONAS: PersonaSummary[] = [
     role: "Aposentado — gerencia a loja de colchões/sofás do filho",
     tagline: "56 anos · Presidente Prudente/SP · teto ~R$ 400 mil (lote)",
     bio: "Aposentado que ainda ajuda na loja do filho, mora em casa própria de rua no centro de Prudente. A esposa quer mais segurança e ele avalia, pela primeira vez, um condomínio fechado.",
+  },
+  {
+    id: "gilmar_novak",
+    context: "campo_alegre",
+    name: "Gilmar Novak",
+    initials: "GN",
+    color: "bg-sky-800",
+    age: 43,
+    city: "Curitiba/PR",
+    occupation: "Representante Comercial e Consultor de Varejo",
+    profile: "Casado, cônjuge advogada",
+    income: "R$ 110–140 mil/ano (variável)",
+    priceCeiling: "~R$ 2 mi (lote)",
+    preferredProduct: "Lote + construção",
+    initialInterest: "MÉDIO",
+    decisionCriteria: [
+      "Relevo e posicionamento do lote (vista, orientação solar)",
+      "Preço negociado próximo de R$ 2 milhões",
+      "Cascata, lago, rio e mirante privados dentro do condomínio",
+      "Entrada alta (~50%) + financiamento bancário do restante",
+      "Liquidez da venda do terreno herdado em São Bento do Sul",
+    ],
+    mainObjections: [
+      "Preço acima da faixa de R$ 1,5–2 milhões que tinha em mente",
+      "Depende da venda do terreno de São Bento do Sul para não descapitalizar",
+      "Sensível a fatores macroeconômicos e políticos externos ao produto",
+    ],
+    suggestedPrompts: [
+      "Você está em busca de algum imóvel de lazer no momento?",
+      "O que mais pesa pra você na hora de escolher um lote de campo?",
+      "Como você pensa a forma de pagamento de uma compra desse porte?",
+    ],
+    avatar: gilmarImg,
+    markdownPath: "/persona-md/campo_alegre/Persona_CampoAlegre_1_Gilmar_Novak.md",
+    role: "Representante Comercial e Consultor de Varejo",
+    tagline: "43 anos · Curitiba/PR · teto ~R$ 2 mi (lote)",
+    bio: "Representante comercial com CNPJ próprio, mora em Curitiba. Vende um terreno herdado do pai para comprar um lote de campo em meio à natureza, perto da família.",
+  },
+  {
+    id: "thiago_teodoro",
+    context: "campo_alegre",
+    name: "Thiago Teodoro",
+    initials: "TT",
+    color: "bg-violet-700",
+    age: 35,
+    city: "Curitiba/PR",
+    occupation: "Empresário — Salão de Beleza e Influenciador",
+    profile: "Casado, sem filhos",
+    income: "~R$ 100 mil/mês (casal)",
+    priceCeiling: "~R$ 1,86–1,9 mi (lote)",
+    preferredProduct: "Lote + construção",
+    initialInterest: "MÉDIO",
+    decisionCriteria: [
+      "Preservação ambiental do entorno (garantia de nada ser construído do lado)",
+      "Lote em torno de 1.000 m² (1.200 m² é grande demais)",
+      "Entrada alta (~60%) — tem herança em caixa, não gosta de dívida",
+      "Transparência sobre a taxa de condomínio (nunca morou em condomínio)",
+      "Estrutura de clube para socializar e também para eventos do próprio negócio",
+    ],
+    mainObjections: [
+      "Nenhuma referência de taxa de condomínio — insegurança real",
+      "Preço acima de R$ 2 milhões para o lote que imaginava",
+      "Metragem de 1.200 m² grande demais para o perfil dele",
+    ],
+    suggestedPrompts: [
+      "Vocês já têm um imóvel de lazer ou ainda estão em busca?",
+      "O que vocês fazem hoje pra desconectar da rotina da cidade?",
+      "Como você pensaria a forma de pagamento pra um lote desses?",
+    ],
+    avatar: thiagoImg,
+    markdownPath: "/persona-md/campo_alegre/Persona_CampoAlegre_2_Thiago_Teodoro.md",
+    role: "Empresário — Salão de Beleza e Influenciador",
+    tagline: "35 anos · Curitiba/PR · teto ~R$ 1,9 mi (lote)",
+    bio: "Empresário do setor de beleza e influenciador digital ao lado do marido. Busca um terreno para construir um oásis de desconexão fora da rotina agitada de Curitiba.",
+  },
+  {
+    id: "andre_bordignon",
+    context: "alta_floresta",
+    name: "André Bordignon",
+    initials: "AB",
+    color: "bg-amber-700",
+    age: 33,
+    city: "Alta Floresta/MT",
+    occupation: "Engenheiro Civil — Obra Pública e Investimentos",
+    profile: "Casado, 1 filho",
+    income: "R$ 40–50 mil/mês",
+    priceCeiling: "~R$ 1.000/m² (lote)",
+    preferredProduct: "Lote para investimento (comprar, construir, revender)",
+    initialInterest: "MÉDIO",
+    decisionCriteria: [
+      "Segurança no padrão do Condomínio Amor (guarita 24h, cerca elétrica, ronda)",
+      "Localização do lado de cá da rodovia, sem atravessar a MT",
+      "Lote a partir de 400 m² (340–343 m² é pequeno para alto padrão)",
+      "Terraplenagem bem executada (região tem banhado e áreas íngremes)",
+      "Condição promocional de lançamento e planos safra para produtores rurais",
+    ],
+    mainObjections: [
+      "Risco de terraplenagem malfeita (já viu dar errado no loteamento vizinho)",
+      "Lotes de 340–343 m² pequenos para alto padrão",
+      "Preço de R$ 1.210/m² acima do que considera razoável (~R$ 1.000/m²)",
+      "Interesse condicionado ao cenário político-econômico do Brasil",
+    ],
+    suggestedPrompts: [
+      "Você está em busca de um novo imóvel hoje? Pra morar ou investir?",
+      "O que você acha decisivo na hora de escolher onde investir em lotes?",
+      "Como você pensaria a forma de pagamento pra esse tipo de compra?",
+    ],
+    avatar: andreImg,
+    markdownPath: "/persona-md/alta_floresta/Persona_AltaFloresta_1_Andre_Bordignon.md",
+    role: "Engenheiro Civil — Obra Pública e Investimentos",
+    tagline: "33 anos · Alta Floresta/MT · teto ~R$ 1.000/m² (lote)",
+    bio: "Engenheiro civil e investidor, mora no bairro Amor em Alta Floresta. Compra lotes para construir e revender — avalia com olhar técnico terraplenagem, segurança e localização.",
+  },
+  {
+    id: "vinicius_queiroz",
+    context: "alta_floresta",
+    name: "Vinícius Queiroz",
+    initials: "VQ",
+    color: "bg-cyan-800",
+    age: 27,
+    city: "Alta Floresta/MT",
+    occupation: "Engenheiro Civil — Construção e Venda (mercado popular)",
+    profile: "Casado, cônjuge advogada",
+    income: "~R$ 23 mil/mês",
+    priceCeiling: "R$ 1.200/m² (lote)",
+    preferredProduct: "Lote para investimento popular; mas compraria para morar",
+    initialInterest: "MÉDIO",
+    decisionCriteria: [
+      "Segurança tecnológica (câmeras, reconhecimento facial, controle de acesso)",
+      "Lote a partir de 400–450 m² com testada maior que os 12 m padrão da cidade",
+      "Clube social completo (academia, salão de festas, bangalôs, mirante/píer)",
+      "Entrada + parcelamento longo (já usou até 120x) com opção de balões anuais",
+      "Food park substituído por um restaurante de verdade",
+    ],
+    mainObjections: [
+      "Como investidor, o produto de alto padrão não serve ao seu perfil popular",
+      "Lote de 343 m² pequeno para alto padrão, testada de 12 m limita a fachada",
+      "Food park sem função clara dentro do condomínio",
+    ],
+    suggestedPrompts: [
+      "Você está em busca de um novo imóvel? Pra morar ou investir?",
+      "O que você acha indispensável em segurança num condomínio fechado?",
+      "Você compraria um lote como esse?",
+    ],
+    avatar: viniciusImg,
+    markdownPath: "/persona-md/alta_floresta/Persona_AltaFloresta_2_Vinicius_Queiroz.md",
+    role: "Engenheiro Civil — Construção e Venda (mercado popular)",
+    tagline: "27 anos · Alta Floresta/MT · teto R$ 1.200/m² (lote)",
+    bio: "Engenheiro civil, ex-cartório, hoje constrói e vende casas para o mercado popular em Alta Floresta. Como investidor o produto não fecha com seu perfil, mas como morador compraria.",
   },
 ];
 
