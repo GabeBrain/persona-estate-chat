@@ -3,7 +3,7 @@
 > Etapas realizadas, etapas futuras e milestones do produto.
 > Detalhes técnicos e análise completa em [DESENVOLVIMENTO.md](./DESENVOLVIMENTO.md).
 
-Última atualização: 2026-09-11
+Última atualização: 2026-11-11
 
 Legenda: ✅ concluído · 🔄 em andamento · ⏳ planejado
 
@@ -33,6 +33,7 @@ Legenda: ✅ concluído · 🔄 em andamento · ⏳ planejado
 - ✅ **Ajuste de naturalidade das 7 personas existentes à época (2026-07-29)** — correção de 5 críticas de analistas: excesso de perguntas por resposta, racionalização excessiva/baixa carga emocional, tom de consultor em vez de consumidor, ausência de imprevisibilidade e baixa diferenciação de estilo entre interesse MÉDIO e BAIXO. Ver detalhe em DESENVOLVIMENTO.md.
 - ✅ **Correção do HTTP 413 com múltiplos anexos (2026-07-30)** — imagens são sempre reconvertidas para JPEG (mesmo sem precisar de redimensionamento) e `/api/chat`/`/api/evaluate` só recebem os anexos binários dos 2 turnos mais recentes da thread, evitando que o payload cresça a cada turno até estourar o limite de corpo da hospedagem.
 - ✅ **Galeria por cidade e retratos realistas (2026-09-11)** — filtro de cidade compartilhável pela URL e substituição das quatro ilustrações mais recentes por retratos fotorrealistas.
+- ✅ **Layout padrão BRAIN Qualitativa (2026-11-11)** — app adaptado a [LAYOUT_BRAIN_QUALITATIVA.md](./LAYOUT_BRAIN_QUALITATIVA.md): sidebar global (logo + "Qualitativa", busca Ctrl + K, menu recolhível com estado salvo, tema claro/escuro), Início por objetivo (hero, filtro de perfil, jornada "Conduzir entrevistas simuladas" com cards por cidade), galeria movida para `/personas` (links antigos `/?city=` redirecionam) e chat com a ficha da persona à direita. Perfis ficam preparados em `src/lib/navigation.tsx`, mas todos veem tudo até existir login (M3).
 
 ---
 

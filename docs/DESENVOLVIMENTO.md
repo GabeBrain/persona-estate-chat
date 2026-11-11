@@ -4,7 +4,7 @@
 > análise de performance, UX e segurança do estado atual.
 > Para o histórico de etapas e o planejamento, ver [ROADMAP.md](./ROADMAP.md).
 
-Última atualização: 2026-07-30
+Última atualização: 2026-11-11
 
 ---
 
@@ -85,13 +85,21 @@ via Lovable a partir deste repositório (`persona-estate-chat/`), que é autossu
 
 ```
 src/
+├── components/layout/
+│   ├── AppShell.tsx       ← sidebar global, busca Ctrl + K, gaveta mobile, tema
+│   └── BrainLoader.tsx    ← estado "Carregando" padrão BRAIN
+├── hooks/use-theme.ts     ← tema claro/escuro (classe .dark no <html>, salvo no localStorage)
 ├── routes/
+│   ├── __root.tsx         ← envolve todas as rotas no AppShell
+│   ├── index.tsx          ← Início (hero, filtro de perfil, jornadas)
+│   ├── personas.tsx       ← galeria de personas com filtro de cidade (?city=)
 │   ├── persona.$personaId.$threadId.tsx   ← UI principal do chat (client)
 │   └── api/
 │       ├── chat.ts        ← POST /api/chat      (streaming SSE)
 │       └── evaluate.ts    ← POST /api/evaluate  (avaliação JSON)
 ├── lib/
-│   ├── personas.ts        ← metadados das personas (client-safe), incl. campo `context`
+│   ├── navigation.tsx     ← fonte única de navegação: páginas, perfis, jornadas
+│   ├── personas.ts        ← metadados das personas (client-safe), incl. `context`, `CONTEXT_LABELS`
 │   ├── personas.server.ts ← carrega system prompts (.txt) — server only
 │   ├── persona-prompts/   ← renato.txt | claudia.txt | rodrigo.txt | sergio_ce.txt | henrique_ce.txt | ester_ce.txt | paula_ce.txt | anderson_prudente.txt | sergio_prudente.txt
 │   └── chat-storage.ts    ← persistência de threads em localStorage
@@ -154,16 +162,14 @@ public/persona-md/         ← fichas markdown completas servidas estaticamente
 
 ### Contextos e troca de persona
 
-- Cada persona tem um `context` (`"plaenge"` | `"aquiraz"` | `"prudente"`); o seletor no header agrupa
-  as personas por contexto usando `<optgroup>`.
-- Ao trocar de persona **dentro do mesmo contexto**, o comportamento é o de sempre:
-  navega para `/persona/$personaId` e reaproxima a thread mais recente dessa persona
-  (ou cria uma nova, se não houver nenhuma).
-- Ao trocar **entre contextos diferentes** (ex.: Renato → Sérgio), a troca já navega
-  direto para uma thread nova (`newThreadId()`) em vez de reabrir a última conversa
-  daquela persona — não faz sentido continuar uma thread pensada para outro produto.
-  Nenhuma conversa é apagada: o histórico anterior de cada persona continua listado
-  normalmente na barra lateral quando você volta a ela.
+- Cada persona tem um `context` (`"plaenge"` | `"aquiraz"` | `"prudente"` | `"campo_alegre"` |
+  `"alta_floresta"`); o rótulo do empreendimento vem de `CONTEXT_LABELS` em `personas.ts`.
+- Desde 2026-11-11 (layout BRAIN Qualitativa) não há mais seletor de persona no topo do
+  chat: a troca acontece pela galeria (`/personas`) ou pela busca global (Ctrl + K), que
+  navegam para `/persona/$personaId` e reabrem a thread mais recente dessa persona (ou
+  criam uma nova). A regra antiga de "thread nova ao trocar de contexto" saiu junto com
+  o seletor. Nenhuma conversa é apagada: o histórico de cada persona continua listado
+  no painel "Conversas" à direita do chat.
 - Como as threads já são isoladas por `chat:persona:<id>`, não há risco de uma persona
   do Aquiraz "herdar" mensagens de uma persona do PLAENGE.
 
@@ -213,6 +219,12 @@ public/persona-md/         ← fichas markdown completas servidas estaticamente
 - **ErrorComponent (dev):** ✅ exibe `error.message` + stack trace em modo `DEV` para facilitar diagnóstico.
 - **Estado vazio:** as "Sugestões para começar" foram removidas (a pedido); manter um CTA discreto para não ficar vazio demais.
 - **Anexos grandes:** dar feedback de limite/cota ao anexar.
+- **Layout BRAIN Qualitativa (2026-11-11):** o app segue [LAYOUT_BRAIN_QUALITATIVA.md](./LAYOUT_BRAIN_QUALITATIVA.md).
+  Sidebar, busca (Ctrl + K) e Início leem a mesma lista em `src/lib/navigation.tsx`;
+  para adicionar uma ferramenta, inclua uma entrada em `PAGINAS` (e uma jornada, se for o caso).
+  Estado da sidebar em `localStorage["brain-qualitativa-sidebar"]`, tema em `localStorage["brain-theme"]`.
+  Sem login ainda: o rodapé mostra "Acesso local" e todos os perfis são liberados
+  (`PERFIS_DO_USUARIO`); avatar, perfil e "Sair" entram com a autenticação do M3.
 
 ---
 

@@ -1,169 +1,216 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Check, ChevronDown, MapPin } from "lucide-react";
-import brainLogo from "@/assets/logo-brain.png";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { useState } from "react";
+import { ArrowRight, BadgeCheck, FileSearch, RefreshCw, Users } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { PERSONAS } from "@/lib/personas";
-
-const ALL_CITIES = "Todas as cidades";
-
-const cities = Array.from(new Set(PERSONAS.map((persona) => persona.city))).sort((a, b) =>
-  a.localeCompare(b, "pt-BR"),
-);
+import { cn } from "@/lib/utils";
+import { JORNADAS, PERFIS, paginasVisiveis, type Jornada, type Perfil } from "@/lib/navigation";
+import { CONTEXT_LABELS, PERSONA_CITIES, PERSONAS } from "@/lib/personas";
 
 export const Route = createFileRoute("/")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  // Compatibilidade: links antigos da galeria (/?city=...) agora vão para /personas.
+  validateSearch: (search: Record<string, unknown>): { city?: string } => ({
     city: typeof search.city === "string" ? search.city : undefined,
   }),
+  beforeLoad: ({ search }) => {
+    if (search.city) {
+      throw redirect({ to: "/personas", search: { city: search.city }, replace: true });
+    }
+  },
   head: () => ({
     meta: [
-      { title: "Personas Sintéticas Brain" },
+      { title: "BRAIN Qualitativa" },
       {
         name: "description",
-        content:
-          "Converse com personas sintéticas Brain baseadas em entrevistas qualitativas reais do mercado imobiliário.",
+        content: "BRAIN Qualitativa: ferramentas de pesquisa qualitativa organizadas por objetivo.",
       },
-      { property: "og:title", content: "Personas Sintéticas Brain" },
-      {
-        property: "og:description",
-        content:
-          "Personas sintéticas treinadas com entrevistas reais para explorar dores e necessidades do mercado imobiliário.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: Index,
+  component: Inicio,
 });
 
-function Index() {
-  const { city } = Route.useSearch();
-  const navigate = useNavigate({ from: "/" });
-  const selectedCity = cities.includes(city ?? "") ? city : undefined;
-  const visiblePersonas = selectedCity
-    ? PERSONAS.filter((persona) => persona.city === selectedCity)
-    : PERSONAS;
+type ToolCard = {
+  key: string;
+  jornada: Jornada["id"];
+  title: string;
+  description: string;
+  study: string;
+  perfis: Perfil[];
+  city?: string;
+};
 
-  function selectCity(nextCity?: string) {
-    void navigate({
-      search: (previous) => ({ ...previous, city: nextCity }),
-      replace: true,
-    });
-  }
+function buildCards(): ToolCard[] {
+  const personas = paginasVisiveis().find((p) => p.path === "/personas");
+  if (!personas) return [];
+
+  return PERSONA_CITIES.map((city) => {
+    const fromCity = PERSONAS.filter((p) => p.city === city);
+    const contexts = Array.from(
+      new Set(fromCity.map((p) => CONTEXT_LABELS[p.context].split(" — ")[0])),
+    );
+    const n = fromCity.length;
+    return {
+      key: city,
+      jornada: "entrevistas-simuladas",
+      title: city,
+      description: `Entreviste ${n} ${n === 1 ? "persona" : "personas"} · ${contexts.join(", ")}.`,
+      study: personas.study,
+      perfis: personas.perfis,
+      city,
+    };
+  });
+}
+
+function Inicio() {
+  const [perfil, setPerfil] = useState<Perfil | null>(null);
+  const cards = buildCards().filter((c) => !perfil || c.perfis.includes(perfil));
+  const jornadas = JORNADAS.map((j) => ({
+    ...j,
+    cards: cards.filter((c) => c.jornada === j.id),
+  })).filter((j) => j.cards.length > 0);
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card/85 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-          <div className="flex items-center gap-3">
-            <img src={brainLogo} alt="Brain" className="h-7 w-auto" />
-            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-              Personas Sintéticas
-            </span>
+    <div className="mx-auto max-w-7xl animate-fade-in space-y-10 p-5 sm:p-8 lg:p-10">
+      {/* 4.1 Hero */}
+      <section className="rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
+        <p className="mb-4 flex items-center gap-2 text-sm font-medium text-primary">
+          <BadgeCheck className="h-4 w-4" aria-hidden="true" />
+          BRAIN Qualitativa · Inteligência estratégica
+        </p>
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+          O que você precisa fazer hoje?
+        </h1>
+        <p className="mt-3 text-base leading-6 text-muted-foreground sm:text-lg">
+          Escolha pelo objetivo do seu trabalho.
+        </p>
+      </section>
+
+      {/* 4.2 Filtro de perfil */}
+      <section className="space-y-3" aria-labelledby="contexto-heading">
+        <div className="flex flex-wrap items-start justify-between gap-2">
+          <div>
+            <h2 id="contexto-heading" className="text-base font-semibold text-foreground">
+              Qual é o seu contexto?
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Use este filtro para destacar os ambientes mais comuns para seu perfil.
+            </p>
           </div>
-          <span className="text-xs uppercase tracking-widest text-muted-foreground">
-            Pesquisa Imobiliária
-          </span>
+          {perfil && (
+            <Button variant="ghost" size="sm" onClick={() => setPerfil(null)}>
+              <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
+              Ver todos
+            </Button>
+          )}
         </div>
-      </header>
-
-      <main className="mx-auto max-w-6xl px-6 py-14">
-        <section className="max-w-2xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-            Personas Sintéticas Brain
-          </p>
-          <h1 className="mt-3 text-4xl font-semibold leading-tight text-foreground sm:text-5xl">
-            Converse com quem move o mercado imobiliário.
-          </h1>
-          <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-            Cada persona abaixo foi modelada a partir de entrevistas qualitativas reais. Faça
-            perguntas abertas, valide hipóteses de produto, explore dores e necessidades como em uma
-            entrevista de pesquisa.
-          </p>
-        </section>
-
-        <section className="mt-10" aria-labelledby="personas-heading">
-          <div className="flex flex-col gap-3 border-y border-border py-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h2 id="personas-heading" className="text-sm font-semibold text-foreground">
-                Personas disponíveis
-              </h2>
-              <p className="mt-0.5 text-sm text-muted-foreground" aria-live="polite">
-                {visiblePersonas.length} {visiblePersonas.length === 1 ? "perfil encontrado" : "perfis encontrados"}
-              </p>
-            </div>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="w-full justify-between sm:w-56">
-                  <span className="flex min-w-0 items-center gap-2">
-                    <MapPin aria-hidden="true" />
-                    <span className="truncate">{selectedCity ?? ALL_CITIES}</span>
-                  </span>
-                  <ChevronDown aria-hidden="true" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[var(--radix-dropdown-menu-trigger-width)]">
-                <DropdownMenuItem onSelect={() => selectCity()}>
-                  <Check className={selectedCity ? "opacity-0" : "opacity-100"} aria-hidden="true" />
-                  {ALL_CITIES}
-                </DropdownMenuItem>
-                {cities.map((cityOption) => (
-                  <DropdownMenuItem key={cityOption} onSelect={() => selectCity(cityOption)}>
-                    <Check
-                      className={selectedCity === cityOption ? "opacity-100" : "opacity-0"}
-                      aria-hidden="true"
-                    />
-                    {cityOption}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-
-          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {visiblePersonas.map((p) => (
-            <Link
-              key={p.id}
-              to="/persona/$personaId"
-              params={{ personaId: p.id }}
-              className="group relative overflow-hidden rounded-xl border border-border bg-card transition hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-sm"
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Filtrar por público">
+          {PERFIS.map((p) => (
+            <Button
+              key={p}
+              size="sm"
+              variant={perfil === p ? "default" : "outline"}
+              aria-pressed={perfil === p}
+              onClick={() => setPerfil((current) => (current === p ? null : p))}
             >
-              <div className="relative h-44 bg-muted">
-                <img
-                  src={p.avatar}
-                  alt={p.name}
-                  loading="lazy"
-                  width={1280}
-                  height={960}
-                  className="absolute inset-0 h-full w-full object-cover"
-                />
-              </div>
-              <div className="space-y-2 p-5">
-                <h2 className="text-xl font-semibold text-foreground">{p.name}</h2>
-                <p className="text-xs uppercase tracking-wider text-primary">{p.role}</p>
-                <p className="text-xs text-muted-foreground">{p.tagline}</p>
-                <p className="line-clamp-3 pt-2 text-sm leading-relaxed text-muted-foreground">
-                  {p.bio}
-                </p>
-                <div className="pt-3 text-sm font-semibold text-foreground group-hover:text-primary">
-                  Iniciar conversa →
+              <Users className="h-3.5 w-3.5" aria-hidden="true" />
+              {p}
+            </Button>
+          ))}
+        </div>
+      </section>
+
+      {/* 4.3 Jornadas */}
+      <section className="space-y-5" aria-labelledby="objetivo-heading">
+        <div>
+          <h2 id="objetivo-heading" className="text-xl font-semibold text-foreground">
+            Comece pelo objetivo
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            Cada caminho reúne os tipos de estudo e fluxos que fazem sentido juntos.
+          </p>
+        </div>
+
+        {jornadas.length === 0 ? (
+          <EmptyState onReset={() => setPerfil(null)} />
+        ) : (
+          <div className={cn("grid gap-5", jornadas.length > 1 && "xl:grid-cols-3")}>
+            {jornadas.map((j) => (
+              <div key={j.id} className="rounded-2xl border border-border bg-muted/35 p-4 sm:p-5">
+                <div className="mb-4 flex items-start gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+                    {j.icon}
+                  </span>
+                  <div>
+                    <h3 className="font-heading text-lg font-semibold text-foreground">
+                      {j.title}
+                    </h3>
+                    <p className="mt-1 text-sm leading-5 text-muted-foreground">{j.description}</p>
+                  </div>
+                </div>
+                <div
+                  className={cn(
+                    "grid gap-3",
+                    j.cards.length > 1 &&
+                      (jornadas.length > 1
+                        ? "sm:grid-cols-2 xl:grid-cols-1"
+                        : "sm:grid-cols-2 xl:grid-cols-3"),
+                  )}
+                >
+                  {j.cards.map((card) => (
+                    <ToolCardLink key={card.key} card={card} />
+                  ))}
                 </div>
               </div>
-            </Link>
-          ))}
+            ))}
           </div>
-        </section>
+        )}
+      </section>
+    </div>
+  );
+}
 
-        <footer className="mt-20 border-t border-border pt-6 text-xs text-muted-foreground">
-          Histórico de conversas salvo neste navegador.
-        </footer>
-      </main>
+function ToolCardLink({ card }: { card: ToolCard }) {
+  return (
+    <Link
+      to="/personas"
+      search={{ city: card.city }}
+      className="group flex min-h-40 flex-col rounded-xl border border-border bg-card p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+    >
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <Badge variant="outline" className="border-primary/25 bg-primary/5 text-primary">
+          {card.study}
+        </Badge>
+        <ArrowRight
+          aria-hidden="true"
+          className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary"
+        />
+      </div>
+      <h3 className="font-heading text-base font-semibold text-foreground">{card.title}</h3>
+      <p className="mt-1.5 text-sm leading-5 text-muted-foreground">{card.description}</p>
+      <div className="mt-auto flex flex-wrap gap-1.5 pt-4">
+        {card.perfis.map((p) => (
+          <span key={p} className="text-xs text-muted-foreground">
+            {p}
+          </span>
+        ))}
+      </div>
+    </Link>
+  );
+}
+
+function EmptyState({ onReset }: { onReset: () => void }) {
+  return (
+    <div className="rounded-xl border border-dashed border-border bg-card p-8 text-center">
+      <FileSearch className="mx-auto h-8 w-8 text-muted-foreground" aria-hidden="true" />
+      <h3 className="mt-3 text-base font-semibold text-foreground">
+        Nenhum ambiente destacado para este perfil
+      </h3>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Você ainda pode ver todos os ambientes ou usar a busca global pelo atalho Ctrl + K.
+      </p>
+      <Button variant="outline" className="mt-4" onClick={onReset}>
+        Ver todos os ambientes
+      </Button>
     </div>
   );
 }

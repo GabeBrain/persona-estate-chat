@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PersonasRouteImport } from './routes/personas'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PersonaPersonaIdRouteImport } from './routes/persona.$personaId'
 import { Route as ApiEvaluateRouteImport } from './routes/api/evaluate'
@@ -16,6 +17,11 @@ import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as PersonaPersonaIdIndexRouteImport } from './routes/persona.$personaId.index'
 import { Route as PersonaPersonaIdThreadIdRouteImport } from './routes/persona.$personaId.$threadId'
 
+const PersonasRoute = PersonasRouteImport.update({
+  id: '/personas',
+  path: '/personas',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -50,6 +56,7 @@ const PersonaPersonaIdThreadIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/personas': typeof PersonasRoute
   '/api/chat': typeof ApiChatRoute
   '/api/evaluate': typeof ApiEvaluateRoute
   '/persona/$personaId': typeof PersonaPersonaIdRouteWithChildren
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/personas': typeof PersonasRoute
   '/api/chat': typeof ApiChatRoute
   '/api/evaluate': typeof ApiEvaluateRoute
   '/persona/$personaId/$threadId': typeof PersonaPersonaIdThreadIdRoute
@@ -66,6 +74,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/personas': typeof PersonasRoute
   '/api/chat': typeof ApiChatRoute
   '/api/evaluate': typeof ApiEvaluateRoute
   '/persona/$personaId': typeof PersonaPersonaIdRouteWithChildren
@@ -76,6 +85,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/personas'
     | '/api/chat'
     | '/api/evaluate'
     | '/persona/$personaId'
@@ -84,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/personas'
     | '/api/chat'
     | '/api/evaluate'
     | '/persona/$personaId/$threadId'
@@ -91,6 +102,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/personas'
     | '/api/chat'
     | '/api/evaluate'
     | '/persona/$personaId'
@@ -100,6 +112,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PersonasRoute: typeof PersonasRoute
   ApiChatRoute: typeof ApiChatRoute
   ApiEvaluateRoute: typeof ApiEvaluateRoute
   PersonaPersonaIdRoute: typeof PersonaPersonaIdRouteWithChildren
@@ -107,6 +120,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/personas': {
+      id: '/personas'
+      path: '/personas'
+      fullPath: '/personas'
+      preLoaderRoute: typeof PersonasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -167,6 +187,7 @@ const PersonaPersonaIdRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PersonasRoute: PersonasRoute,
   ApiChatRoute: ApiChatRoute,
   ApiEvaluateRoute: ApiEvaluateRoute,
   PersonaPersonaIdRoute: PersonaPersonaIdRouteWithChildren,

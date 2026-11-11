@@ -16,6 +16,22 @@ export type InterestLevel = "ALTO" | "MÉDIO" | "BAIXO";
 
 export type PersonaContext = "plaenge" | "aquiraz" | "prudente" | "campo_alegre" | "alta_floresta";
 
+export const CONTEXT_LABELS: Record<PersonaContext, string> = {
+  plaenge: "PLAENGE — Gov. Celso Ramos/SC",
+  aquiraz: "Novo Mandara — Porto das Dunas/CE",
+  prudente: "Presidente Prudente — Horizontal",
+  campo_alegre: "Monte Sereno — Campo Alegre/SC",
+  alta_floresta: "Grupo Almeida Prado — Alta Floresta/MT",
+};
+
+export const CONTEXT_ORDER: PersonaContext[] = [
+  "plaenge",
+  "aquiraz",
+  "prudente",
+  "campo_alegre",
+  "alta_floresta",
+];
+
 export type PersonaSummary = {
   id: string;
   context: PersonaContext;
@@ -546,3 +562,8 @@ export function normalizeInteresse(val?: string | null): InterestLevel {
   if (up === "BAIXO") return "BAIXO";
   return "MÉDIO";
 }
+
+/** Cidades de residência das personas, em ordem alfabética. */
+export const PERSONA_CITIES: string[] = Array.from(new Set(PERSONAS.map((p) => p.city))).sort(
+  (a, b) => a.localeCompare(b, "pt-BR"),
+);

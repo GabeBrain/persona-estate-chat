@@ -1,9 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import brainLogo from "@/assets/logo-brain.png";
 import {
-  ArrowLeft,
   Bug,
   Download,
   FileText,
@@ -13,16 +11,11 @@ import {
   RotateCcw,
   Send,
   StopCircle,
+  PanelRight,
   Trash2,
   X,
 } from "lucide-react";
-import {
-  getPersona,
-  normalizeInteresse,
-  PERSONAS,
-  type InterestLevel,
-  type PersonaContext,
-} from "@/lib/personas";
+import { CONTEXT_LABELS, getPersona, normalizeInteresse, type InterestLevel } from "@/lib/personas";
 import {
   deleteThread,
   fileToBase64,
@@ -49,21 +42,6 @@ function friendlyApiError(msg: string): string {
   }
   return msg;
 }
-
-const CONTEXT_LABELS: Record<PersonaContext, string> = {
-  plaenge: "PLAENGE — Gov. Celso Ramos/SC",
-  aquiraz: "Novo Mandara — Porto das Dunas/CE",
-  prudente: "Presidente Prudente — Horizontal",
-  campo_alegre: "Monte Sereno — Campo Alegre/SC",
-  alta_floresta: "Grupo Almeida Prado — Alta Floresta/MT",
-};
-const CONTEXT_ORDER: PersonaContext[] = [
-  "plaenge",
-  "aquiraz",
-  "prudente",
-  "campo_alegre",
-  "alta_floresta",
-];
 
 // --- JSON parsing helpers (mirror POC) -----------------------------
 
@@ -518,106 +496,93 @@ function ChatPage() {
 
   if (!persona) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background text-muted-foreground">
-        Persona não encontrada.{" "}
-        <Link to="/" search={{ city: undefined }} className="ml-2 underline">
-          voltar
-        </Link>
+      <div className="mx-auto max-w-7xl animate-fade-in p-5 sm:p-8">
+        <div className="rounded-xl border border-dashed border-border bg-card p-8 text-center">
+          <h1 className="text-base font-semibold text-foreground">Persona não encontrada</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            O link pode estar desatualizado. Escolha uma persona na galeria.
+          </p>
+          <Link
+            to="/personas"
+            className="mt-4 inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+          >
+            Ver personas
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen flex-col bg-background">
-      {/* Top bar */}
-      <header className="flex flex-shrink-0 items-center justify-between gap-3 border-b border-border bg-card px-4 py-3 shadow-sm">
+    <div className="flex h-full flex-col">
+      {/* Cabeçalho da ferramenta: identificação + ações da própria ferramenta.
+          A navegação entre personas fica no menu e na busca (Ctrl + K). */}
+      <header className="flex flex-shrink-0 items-center justify-between gap-3 border-b border-border bg-card px-4 py-3 sm:px-5">
         <div className="flex min-w-0 items-center gap-3">
-          <button
-            onClick={() => setSidebarOpen((v) => !v)}
-            className="rounded p-1 text-muted-foreground hover:bg-muted lg:hidden"
-            aria-label="Menu"
-          >
-            ☰
-          </button>
-          <Link
-            to="/"
-            search={{ city: undefined }}
-            className="hidden items-center gap-2 text-muted-foreground hover:text-foreground sm:flex"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            <span className="text-sm">Personas</span>
-          </Link>
-          <img src={brainLogo} alt="Brain" className="hidden h-7 w-auto md:block" />
-          <div className="flex items-center gap-2">
-            <select
-              value={personaId}
-              onChange={(e) => {
-                const nextId = e.target.value;
-                const nextPersona = getPersona(nextId);
-                if (nextPersona && nextPersona.context !== persona.context) {
-                  // Contexto diferente (ex.: PLAENGE → Novo Mandara): não faz
-                  // sentido continuar uma thread do produto anterior, então
-                  // já abre uma conversa nova, sem modal de confirmação.
-                  navigate({
-                    to: "/persona/$personaId/$threadId",
-                    params: { personaId: nextId, threadId: newThreadId() },
-                  });
-                } else {
-                  navigate({
-                    to: "/persona/$personaId",
-                    params: { personaId: nextId },
-                  });
-                }
-              }}
-              className="rounded-lg border border-input bg-card px-3 py-1.5 text-sm font-medium text-foreground focus:border-primary focus:outline-none"
-            >
-              {CONTEXT_ORDER.map((ctx) => (
-                <optgroup key={ctx} label={CONTEXT_LABELS[ctx]}>
-                  {PERSONAS.filter((p) => p.context === ctx).map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name}
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-            </select>
+          <img
+            src={persona.avatar}
+            alt=""
+            aria-hidden="true"
+            className="h-9 w-9 shrink-0 rounded-full object-cover"
+          />
+          <div className="min-w-0">
+            <h1 className="truncate text-base font-semibold text-foreground">{persona.name}</h1>
+            <p className="truncate text-xs text-muted-foreground">
+              {CONTEXT_LABELS[persona.context]}
+            </p>
           </div>
         </div>
 
         <div className="flex flex-shrink-0 items-center gap-2">
-          <InterestBadge level={interestLevel} manual={isManualInterest} />
+          <span className="hidden sm:inline-flex">
+            <InterestBadge level={interestLevel} manual={isManualInterest} />
+          </span>
 
           <button
             onClick={exportTranscript}
             disabled={messages.length === 0}
             className="hidden items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-foreground hover:bg-muted disabled:opacity-40 sm:flex"
           >
-            <Download className="h-3.5 w-3.5" /> Exportar
+            <Download className="h-3.5 w-3.5" aria-hidden="true" /> Exportar
           </button>
 
           <button
             onClick={resetInterview}
             className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-foreground hover:bg-muted"
+            title="Reiniciar entrevista"
           >
-            <RotateCcw className="h-3.5 w-3.5" /> Reiniciar
+            <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+            <span className="hidden sm:inline">Reiniciar</span>
           </button>
 
           <button
             onClick={() => setDebugMode((v) => !v)}
             className={`flex items-center gap-1.5 rounded-lg border px-2 py-1.5 text-xs ${
               debugMode
-                ? "border-amber-300 bg-amber-50 text-amber-700"
+                ? "border-warning/40 bg-warning/10 text-warning"
                 : "border-border text-muted-foreground hover:bg-muted"
             }`}
             aria-label="Debug"
+            title="Debug"
+            aria-pressed={debugMode}
           >
             <Bug className="h-3.5 w-3.5" />
+          </button>
+
+          <button
+            onClick={() => setSidebarOpen((v) => !v)}
+            className="rounded-lg border border-border px-2 py-1.5 text-muted-foreground hover:bg-muted lg:hidden"
+            aria-label="Ficha e conversas"
+            title="Ficha e conversas"
+            aria-expanded={sidebarOpen}
+          >
+            <PanelRight className="h-3.5 w-3.5" />
           </button>
         </div>
       </header>
 
       {debugMode && (
-        <div className="flex flex-wrap gap-4 border-b border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-800">
+        <div className="flex flex-wrap gap-4 border-b border-warning/30 bg-warning/10 px-4 py-2 text-xs text-warning">
           <span>
             Modelo: <code>claude-sonnet-4-6</code>
           </span>
@@ -639,198 +604,7 @@ function ChatPage() {
         </div>
       )}
 
-      <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
-        <aside
-          className={`${
-            sidebarOpen ? "flex" : "hidden"
-          } absolute inset-0 z-40 w-80 flex-col gap-4 overflow-y-auto border-r border-border bg-card p-4 lg:relative lg:z-auto lg:flex`}
-        >
-          <div className="flex items-center justify-between lg:hidden">
-            <p className="text-sm font-semibold text-foreground">Ficha + Conversas</p>
-            <button onClick={() => setSidebarOpen(false)} className="text-muted-foreground">
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-
-          {/* Persona identity */}
-          <div className="flex items-center gap-3">
-            <img
-              src={persona.avatar}
-              alt={persona.name}
-              className="h-14 w-14 rounded-full object-cover"
-            />
-            <div className="min-w-0">
-              <h2 className="truncate text-lg font-semibold text-foreground">{persona.name}</h2>
-              <p className="text-xs text-muted-foreground">
-                {persona.age} anos · {persona.city}
-              </p>
-              <p className="text-xs text-muted-foreground">{persona.occupation}</p>
-            </div>
-          </div>
-
-          {/* Quick stats */}
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            <Stat label="Renda" value={persona.income} />
-            <Stat label="Teto" value={persona.priceCeiling} />
-            <Stat label="Produto" value={persona.preferredProduct} />
-            <Stat label="Perfil" value={persona.profile} />
-          </div>
-
-          {persona.context === "aquiraz" && (
-            <p className="text-xs text-muted-foreground">
-              <span className="font-medium text-foreground">Empreendimento:</span> Novo Mandara ·
-              Apartamento vertical resort · Porto das Dunas/CE
-            </p>
-          )}
-
-          {persona.context === "prudente" && (
-            <p className="text-xs text-muted-foreground">
-              <span className="font-medium text-foreground">Empreendimento:</span> Condomínio
-              horizontal de lotes · Região dos Damas · Presidente Prudente/SP
-            </p>
-          )}
-
-          {persona.context === "campo_alegre" && (
-            <p className="text-xs text-muted-foreground">
-              <span className="font-medium text-foreground">Empreendimento:</span> Condomínio
-              Monte Sereno · Lotes de campo · Campo Alegre/SC
-            </p>
-          )}
-
-          {persona.context === "alta_floresta" && (
-            <p className="text-xs text-muted-foreground">
-              <span className="font-medium text-foreground">Empreendimento:</span> Grupo Almeida
-              Prado · Lotes de alto padrão · Jardim Santa Cecília · Alta Floresta/MT
-            </p>
-          )}
-
-          {/* Interest manual override */}
-          <div className="rounded-xl border border-border p-3">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Interesse
-            </p>
-            <div className="flex gap-1">
-              {(["ALTO", "MÉDIO", "BAIXO"] as InterestLevel[]).map((lvl) => (
-                <button
-                  key={lvl}
-                  onClick={() => handleInterestSelect(lvl)}
-                  className={`flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition ${
-                    interestLevel === lvl
-                      ? `${interestColor(lvl)} text-primary-foreground`
-                      : "bg-muted text-muted-foreground hover:bg-accent/35 hover:text-foreground"
-                  }`}
-                >
-                  {lvl}
-                </button>
-              ))}
-            </div>
-            {isManualInterest && (
-              <button
-                onClick={handleClearManual}
-                className="mt-2 text-xs text-primary hover:underline"
-              >
-                Voltar ao modo automático
-              </button>
-            )}
-          </div>
-
-          {/* Criteria */}
-          <Collapsible title="Critérios de decisão">
-            <ul className="space-y-2">
-              {persona.decisionCriteria.map((c, i) => (
-                <li key={i} className="flex gap-2 text-xs text-muted-foreground">
-                  <span className="font-bold text-primary">{i + 1}.</span>
-                  {c}
-                </li>
-              ))}
-            </ul>
-          </Collapsible>
-
-          {/* Objections */}
-          <div>
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Principais objeções
-            </p>
-            <ul className="space-y-1">
-              {persona.mainObjections.map((o, i) => (
-                <li key={i} className="flex gap-2 text-xs text-muted-foreground">
-                  <span className="text-destructive">✕</span>
-                  {o}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {personaMd && (
-            <button
-              onClick={() => setShowFullPersona(true)}
-              className="text-left text-xs text-primary underline underline-offset-2 hover:text-secondary"
-            >
-              Ver persona completa →
-            </button>
-          )}
-
-          {/* Threads list */}
-          <div className="border-t border-border pt-3">
-            <div className="mb-2 flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Conversas
-              </span>
-              <button
-                onClick={handleNewThread}
-                className="inline-flex items-center gap-1 rounded text-xs text-primary hover:text-secondary"
-              >
-                <Plus className="h-3.5 w-3.5" /> Nova
-              </button>
-            </div>
-            <div className="space-y-1">
-              {threads.length === 0 && (
-                <p className="text-xs text-muted-foreground">Sem conversas ainda.</p>
-              )}
-              {threads.map((t) => {
-                const active = t.id === threadId;
-                return (
-                  <div
-                    key={t.id}
-                    className={`group flex items-center gap-1 rounded-md px-2 py-1.5 text-sm ${
-                      active
-                        ? "bg-muted text-foreground"
-                        : "text-muted-foreground hover:bg-muted/70"
-                    }`}
-                  >
-                    <button
-                      onClick={() =>
-                        navigate({
-                          to: "/persona/$personaId/$threadId",
-                          params: { personaId, threadId: t.id },
-                        })
-                      }
-                      className="flex-1 truncate text-left text-xs"
-                    >
-                      {t.title}
-                    </button>
-                    <button
-                      onClick={() => handleDeleteThread(t.id)}
-                      className="rounded p-0.5 text-muted-foreground opacity-0 hover:text-destructive group-hover:opacity-100"
-                      aria-label="Apagar"
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </aside>
-
-        {sidebarOpen && (
-          <div
-            className="fixed inset-0 z-30 bg-black/30 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-
+      <div className="relative flex min-h-0 flex-1 overflow-hidden">
         {/* Chat area */}
         <main
           className="relative flex flex-1 flex-col overflow-hidden"
@@ -1014,6 +788,203 @@ function ChatPage() {
             </div>
           </div>
         </main>
+
+        {sidebarOpen && (
+          <div
+            className="absolute inset-0 z-30 bg-black/30 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
+        {/* Ficha da persona + conversas (à direita do chat) */}
+        <aside
+          className={`${
+            sidebarOpen ? "flex" : "hidden"
+          } absolute inset-y-0 right-0 z-40 w-80 max-w-[90%] flex-shrink-0 flex-col gap-4 overflow-y-auto border-l border-border bg-card p-4 shadow-md lg:relative lg:z-auto lg:flex lg:max-w-none lg:shadow-none`}
+          aria-label="Ficha da persona e conversas"
+        >
+          <div className="flex items-center justify-between lg:hidden">
+            <p className="text-sm font-semibold text-foreground">Ficha + Conversas</p>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-foreground"
+              aria-label="Fechar ficha"
+              title="Fechar ficha"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+
+          {/* Persona identity */}
+          <div className="flex items-center gap-3">
+            <img
+              src={persona.avatar}
+              alt={persona.name}
+              className="h-14 w-14 rounded-full object-cover"
+            />
+            <div className="min-w-0">
+              <h2 className="truncate text-lg font-semibold text-foreground">{persona.name}</h2>
+              <p className="text-xs text-muted-foreground">
+                {persona.age} anos · {persona.city}
+              </p>
+              <p className="text-xs text-muted-foreground">{persona.occupation}</p>
+            </div>
+          </div>
+
+          {/* Quick stats */}
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            <Stat label="Renda" value={persona.income} />
+            <Stat label="Teto" value={persona.priceCeiling} />
+            <Stat label="Produto" value={persona.preferredProduct} />
+            <Stat label="Perfil" value={persona.profile} />
+          </div>
+
+          {persona.context === "aquiraz" && (
+            <p className="text-xs text-muted-foreground">
+              <span className="font-medium text-foreground">Empreendimento:</span> Novo Mandara ·
+              Apartamento vertical resort · Porto das Dunas/CE
+            </p>
+          )}
+
+          {persona.context === "prudente" && (
+            <p className="text-xs text-muted-foreground">
+              <span className="font-medium text-foreground">Empreendimento:</span> Condomínio
+              horizontal de lotes · Região dos Damas · Presidente Prudente/SP
+            </p>
+          )}
+
+          {persona.context === "campo_alegre" && (
+            <p className="text-xs text-muted-foreground">
+              <span className="font-medium text-foreground">Empreendimento:</span> Condomínio Monte
+              Sereno · Lotes de campo · Campo Alegre/SC
+            </p>
+          )}
+
+          {persona.context === "alta_floresta" && (
+            <p className="text-xs text-muted-foreground">
+              <span className="font-medium text-foreground">Empreendimento:</span> Grupo Almeida
+              Prado · Lotes de alto padrão · Jardim Santa Cecília · Alta Floresta/MT
+            </p>
+          )}
+
+          {/* Interest manual override */}
+          <div className="rounded-xl border border-border p-3">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Interesse
+            </p>
+            <div className="flex gap-1">
+              {(["ALTO", "MÉDIO", "BAIXO"] as InterestLevel[]).map((lvl) => (
+                <button
+                  key={lvl}
+                  onClick={() => handleInterestSelect(lvl)}
+                  className={`flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition ${
+                    interestLevel === lvl
+                      ? `${interestColor(lvl)} text-primary-foreground`
+                      : "bg-muted text-muted-foreground hover:bg-accent/35 hover:text-foreground"
+                  }`}
+                >
+                  {lvl}
+                </button>
+              ))}
+            </div>
+            {isManualInterest && (
+              <button
+                onClick={handleClearManual}
+                className="mt-2 text-xs text-primary hover:underline"
+              >
+                Voltar ao modo automático
+              </button>
+            )}
+          </div>
+
+          {/* Criteria */}
+          <Collapsible title="Critérios de decisão">
+            <ul className="space-y-2">
+              {persona.decisionCriteria.map((c, i) => (
+                <li key={i} className="flex gap-2 text-xs text-muted-foreground">
+                  <span className="font-bold text-primary">{i + 1}.</span>
+                  {c}
+                </li>
+              ))}
+            </ul>
+          </Collapsible>
+
+          {/* Objections */}
+          <div>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Principais objeções
+            </p>
+            <ul className="space-y-1">
+              {persona.mainObjections.map((o, i) => (
+                <li key={i} className="flex gap-2 text-xs text-muted-foreground">
+                  <span className="text-destructive">✕</span>
+                  {o}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {personaMd && (
+            <button
+              onClick={() => setShowFullPersona(true)}
+              className="text-left text-xs text-primary underline underline-offset-2 hover:text-secondary"
+            >
+              Ver persona completa →
+            </button>
+          )}
+
+          {/* Threads list */}
+          <div className="border-t border-border pt-3">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Conversas
+              </span>
+              <button
+                onClick={handleNewThread}
+                className="inline-flex items-center gap-1 rounded text-xs text-primary hover:text-secondary"
+              >
+                <Plus className="h-3.5 w-3.5" /> Nova
+              </button>
+            </div>
+            <div className="space-y-1">
+              {threads.length === 0 && (
+                <p className="text-xs text-muted-foreground">Sem conversas ainda.</p>
+              )}
+              {threads.map((t) => {
+                const active = t.id === threadId;
+                return (
+                  <div
+                    key={t.id}
+                    className={`group flex items-center gap-1 rounded-md px-2 py-1.5 text-sm ${
+                      active
+                        ? "bg-muted text-foreground"
+                        : "text-muted-foreground hover:bg-muted/70"
+                    }`}
+                  >
+                    <button
+                      onClick={() =>
+                        navigate({
+                          to: "/persona/$personaId/$threadId",
+                          params: { personaId, threadId: t.id },
+                        })
+                      }
+                      className="flex-1 truncate text-left text-xs"
+                    >
+                      {t.title}
+                    </button>
+                    <button
+                      onClick={() => handleDeleteThread(t.id)}
+                      className="rounded p-0.5 text-muted-foreground opacity-0 hover:text-destructive group-hover:opacity-100"
+                      aria-label="Apagar"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </aside>
       </div>
 
       {/* Evaluation modal */}
@@ -1078,7 +1049,7 @@ function Collapsible({ title, children }: { title: string; children: React.React
 function interestColor(level: InterestLevel): string {
   if (level === "ALTO") return "bg-primary";
   if (level === "BAIXO") return "bg-destructive";
-  return "bg-amber-500";
+  return "bg-warning";
 }
 
 function InterestBadge({ level, manual }: { level: InterestLevel; manual: boolean }) {
