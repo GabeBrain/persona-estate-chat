@@ -5,6 +5,16 @@ import { loadThreads, newThreadId } from "@/lib/chat-storage";
 import { BrainLoader } from "@/components/layout/BrainLoader";
 
 export const Route = createFileRoute("/persona/$personaId/")({
+  head: ({ params }) => {
+    const name = getPersona(params.personaId)?.name ?? "Persona";
+    const title = `${name} · BRAIN Qualitativa`;
+    const description = `Entrevista simulada com ${name}, persona sintética do mercado imobiliário.`;
+    return { meta: [
+      { title }, { name: "description", content: description },
+      { property: "og:title", content: title }, { property: "og:description", content: description },
+      { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" },
+    ] };
+  },
   component: PersonaIndex,
 });
 

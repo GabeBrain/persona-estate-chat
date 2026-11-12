@@ -6,6 +6,7 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  type ErrorComponentProps,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
@@ -36,7 +37,8 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: ErrorComponentProps) {
+  const displayError = error instanceof Error ? error : new Error(String(error));
   console.error("[ErrorBoundary]", error);
   const router = useRouter();
   const isDev = import.meta.env.DEV;
@@ -55,8 +57,8 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         </p>
         {isDev && (
           <pre className="mt-4 max-h-48 overflow-auto rounded-md bg-muted px-4 py-3 text-left text-xs text-destructive">
-            {error?.message}
-            {error?.stack ? `\n\n${error.stack}` : ""}
+            {displayError.message}
+            {displayError.stack ? `\n\n${displayError.stack}` : ""}
           </pre>
         )}
         <div className="mt-6 flex flex-wrap justify-center gap-2">
@@ -107,16 +109,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "twitter:description",
         content: "Personas sintéticas Brain para entrevistas simuladas no mercado imobiliário.",
-      },
-      {
-        property: "og:image",
-        content:
-          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/337891e4-bf56-44fd-a7a7-d0c433507d51/id-preview-44d17e60--d66b4485-9165-4595-8435-04c408aa6e73.lovable.app-1781805609388.png",
-      },
-      {
-        name: "twitter:image",
-        content:
-          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/337891e4-bf56-44fd-a7a7-d0c433507d51/id-preview-44d17e60--d66b4485-9165-4595-8435-04c408aa6e73.lovable.app-1781805609388.png",
       },
     ],
     links: [

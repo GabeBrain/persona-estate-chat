@@ -84,3 +84,7 @@ Toda entrada correspondente a um card traz:
 Board principal: `Backlogs & Roadmaps` — `18398428946`.
 Board de execução semanal: `Entregas` — `18398428948`.
 <!-- FIM PROTOCOLO-SESSAO -->
+
+## App asset conventions
+
+- New persona portraits use CDN `.jpg.asset.json` pointers and `avatar: importedPointer.url`, keeping binary media out of the repository.

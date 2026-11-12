@@ -9,27 +9,27 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PersonasRouteImport } from './routes/personas'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as PersonaPersonaIdRouteImport } from './routes/persona.$personaId'
-import { Route as ApiEvaluateRouteImport } from './routes/api/evaluate'
+import { Route as PersonasRouteImport } from './routes/personas'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as ApiEvaluateRouteImport } from './routes/api/evaluate'
+import { Route as PersonaPersonaIdRouteImport } from './routes/persona.$personaId'
 import { Route as PersonaPersonaIdIndexRouteImport } from './routes/persona.$personaId.index'
 import { Route as PersonaPersonaIdThreadIdRouteImport } from './routes/persona.$personaId.$threadId'
 
-const PersonasRoute = PersonasRouteImport.update({
-  id: '/personas',
-  path: '/personas',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PersonaPersonaIdRoute = PersonaPersonaIdRouteImport.update({
-  id: '/persona/$personaId',
-  path: '/persona/$personaId',
+const PersonasRoute = PersonasRouteImport.update({
+  id: '/personas',
+  path: '/personas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiEvaluateRoute = ApiEvaluateRouteImport.update({
@@ -37,9 +37,9 @@ const ApiEvaluateRoute = ApiEvaluateRouteImport.update({
   path: '/api/evaluate',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiChatRoute = ApiChatRouteImport.update({
-  id: '/api/chat',
-  path: '/api/chat',
+const PersonaPersonaIdRoute = PersonaPersonaIdRouteImport.update({
+  id: '/persona/$personaId',
+  path: '/persona/$personaId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PersonaPersonaIdIndexRoute = PersonaPersonaIdIndexRouteImport.update({
@@ -120,13 +120,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/personas': {
-      id: '/personas'
-      path: '/personas'
-      fullPath: '/personas'
-      preLoaderRoute: typeof PersonasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -134,11 +127,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/persona/$personaId': {
-      id: '/persona/$personaId'
-      path: '/persona/$personaId'
-      fullPath: '/persona/$personaId'
-      preLoaderRoute: typeof PersonaPersonaIdRouteImport
+    '/personas': {
+      id: '/personas'
+      path: '/personas'
+      fullPath: '/personas'
+      preLoaderRoute: typeof PersonasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/evaluate': {
@@ -148,11 +148,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiEvaluateRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/chat': {
-      id: '/api/chat'
-      path: '/api/chat'
-      fullPath: '/api/chat'
-      preLoaderRoute: typeof ApiChatRouteImport
+    '/persona/$personaId': {
+      id: '/persona/$personaId'
+      path: '/persona/$personaId'
+      fullPath: '/persona/$personaId'
+      preLoaderRoute: typeof PersonaPersonaIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/persona/$personaId/': {

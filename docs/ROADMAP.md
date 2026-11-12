@@ -3,13 +3,15 @@
 > Etapas realizadas, etapas futuras e milestones do produto.
 > Detalhes técnicos e análise completa em [DESENVOLVIMENTO.md](./DESENVOLVIMENTO.md).
 
-Última atualização: 2026-11-11
+Última atualização: 2026-11-12
 
 Legenda: ✅ concluído · 🔄 em andamento · ⏳ planejado
 
 ---
 
 ## Etapas Realizadas ✅
+
+- ✅ **Fortaleza/BLD — retratos e conferência (2026-11-12)** — sete retratos fictícios fotorrealistas 1280×960 publicados como `persona-<nome>.jpg.asset.json`, imports com `.url` e SVGs provisórios removidos. Galeria `/personas` conferida com as sete personas em Fortaleza/CE; resposta real de Anderson Moreira recebida como JSON com `fala` e `interesse`, com somente a fala no balão e interesse separado na interface. Imagens validadas em 1280px e 625px sem erros de execução. IDs, contextos, prompts, fichas e fluxo de chat preservados. Verificação Git limitada às referências locais: fetch/pull não executados por restrição do ambiente; `secondary` sem referência disponível.
 
 - ✅ **Pesquisa qualitativa** — 19 entrevistas com potenciais compradores (transcrições originais removidas em 2026-07-28 junto com a POC legada; síntese já incorporada nas personas).
 - ✅ **Síntese de personas** — 3 personas sintéticas (Renato, Claudia, Rodrigo) com critérios, objeções e prompts.

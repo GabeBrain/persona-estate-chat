@@ -20,6 +20,10 @@ export const Route = createFileRoute("/personas")({
   head: () => ({
     meta: [
       { title: "Personas Sintéticas · BRAIN Qualitativa" },
+      { property: "og:title", content: "Personas Sintéticas · BRAIN Qualitativa" },
+      { property: "og:description", content: "Personas do mercado imobiliário modeladas a partir de entrevistas qualitativas." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         name: "description",
         content:
@@ -111,14 +115,14 @@ function PersonasPage() {
               params={{ personaId: p.id }}
               className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
-              <div className="relative h-44 bg-muted">
+              <div className={`relative bg-muted ${p.context === "fortaleza-bld" ? "aspect-[4/3]" : "h-44"}`}>
                 <img
                   src={p.avatar}
                   alt={p.name}
                   loading="lazy"
                   width={1280}
                   height={960}
-                  className="absolute inset-0 h-full w-full object-cover"
+                  className={`absolute inset-0 h-full w-full object-cover ${p.context === "fortaleza-bld" ? "object-top" : ""}`}
                 />
               </div>
               <div className="flex flex-1 flex-col p-5">

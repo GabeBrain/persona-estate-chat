@@ -20,6 +20,10 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "BRAIN Qualitativa" },
+      { property: "og:title", content: "BRAIN Qualitativa" },
+      { property: "og:description", content: "Ferramentas de pesquisa qualitativa organizadas por objetivo." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         name: "description",
         content: "BRAIN Qualitativa: ferramentas de pesquisa qualitativa organizadas por objetivo.",

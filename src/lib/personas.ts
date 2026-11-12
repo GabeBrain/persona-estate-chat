@@ -11,13 +11,13 @@ import gilmarImg from "@/assets/persona-gilmar.jpg.asset.json";
 import thiagoImg from "@/assets/persona-thiago.jpg.asset.json";
 import andreImg from "@/assets/persona-andre.jpg.asset.json";
 import viniciusImg from "@/assets/persona-vinicius.jpg.asset.json";
-import cristianoImg from "@/assets/persona-cristiano.svg";
-import franciscoImg from "@/assets/persona-francisco.svg";
-import alexandreImg from "@/assets/persona-alexandre.svg";
-import andersonMoreiraImg from "@/assets/persona-anderson_moreira.svg";
-import joseEduardoImg from "@/assets/persona-jose_eduardo.svg";
-import eduardoBenevidesImg from "@/assets/persona-eduardo_benevides.svg";
-import luanaImg from "@/assets/persona-luana.svg";
+import cristianoImg from "@/assets/persona-cristiano.jpg.asset.json";
+import franciscoImg from "@/assets/persona-francisco.jpg.asset.json";
+import alexandreImg from "@/assets/persona-alexandre.jpg.asset.json";
+import andersonMoreiraImg from "@/assets/persona-anderson_moreira.jpg.asset.json";
+import joseEduardoImg from "@/assets/persona-jose_eduardo.jpg.asset.json";
+import eduardoBenevidesImg from "@/assets/persona-eduardo_benevides.jpg.asset.json";
+import luanaImg from "@/assets/persona-luana.jpg.asset.json";
 
 export type InterestLevel = "ALTO" | "MÉDIO" | "BAIXO";
 
@@ -595,7 +595,7 @@ export const PERSONAS: PersonaSummary[] = [
       "Como é o condomínio onde você mora hoje e o que mudaria nele?",
       "O que faria você trocar de casa?",
     ],
-    avatar: cristianoImg,
+    avatar: cristianoImg.url,
     markdownPath: "/persona-md/fortaleza_bld/Persona_Fortaleza_1_Cristiano_Albuquerque.md",
     role: "Empresário — Distribuidora de Alimentos",
     tagline: "50 anos · Fortaleza/CE · teto R$ 3.000/m²",
@@ -633,7 +633,7 @@ export const PERSONAS: PersonaSummary[] = [
       "O que faz um condomínio ser premium pra você?",
       "Como você enxerga a concorrência na região da Praia do Futuro?",
     ],
-    avatar: franciscoImg,
+    avatar: franciscoImg.url,
     markdownPath: "/persona-md/fortaleza_bld/Persona_Fortaleza_2_Francisco_Bezerra.md",
     role: "Empresário — Telecomunicações",
     tagline: "41 anos · Fortaleza/CE · teto R$ 3.500/m² (lote 800–1.000 m²)",
@@ -671,7 +671,7 @@ export const PERSONAS: PersonaSummary[] = [
       "O que você considera decisivo no entorno de um condomínio?",
       "Como você avalia a segurança dos condomínios de alto padrão?",
     ],
-    avatar: alexandreImg,
+    avatar: alexandreImg.url,
     markdownPath: "/persona-md/fortaleza_bld/Persona_Fortaleza_3_Alexandre_Holanda.md",
     role: "Empresário e Investidor — Imobiliário e Alimentos",
     tagline: "58 anos · Fortaleza/CE · teto R$ 2.500–3.000/m²",
@@ -709,7 +709,7 @@ export const PERSONAS: PersonaSummary[] = [
       "O que você imagina para a primeira casa de vocês?",
       "Como você pensa em pagar um lote assim?",
     ],
-    avatar: andersonMoreiraImg,
+    avatar: andersonMoreiraImg.url,
     markdownPath: "/persona-md/fortaleza_bld/Persona_Fortaleza_4_Anderson_Moreira.md",
     role: "Empreendedor — Tecnologia e Consultoria Financeira",
     tagline: "37 anos · Fortaleza/CE · fecha a R$ 3.500/m²",
@@ -747,7 +747,7 @@ export const PERSONAS: PersonaSummary[] = [
       "Por que andar a pé na cidade é tão importante pra você?",
       "O que muda se você estivesse buscando casa?",
     ],
-    avatar: joseEduardoImg,
+    avatar: joseEduardoImg.url,
     markdownPath: "/persona-md/fortaleza_bld/Persona_Fortaleza_5_JoseEduardo_Fontenele.md",
     role: "Industrial de Alimentos",
     tagline: "53 anos · Fortaleza/CE · aceita R$ 3.500/m² no 360 m²",
@@ -785,7 +785,7 @@ export const PERSONAS: PersonaSummary[] = [
       "O que você pensa sobre mudar de apartamento para casa?",
       "Como você compara esse produto com o Aquiraz Riviera?",
     ],
-    avatar: eduardoBenevidesImg,
+    avatar: eduardoBenevidesImg.url,
     markdownPath: "/persona-md/fortaleza_bld/Persona_Fortaleza_6_Eduardo_Benevides.md",
     role: "Empresário — Educação e Consultoria",
     tagline: "64 anos · Fortaleza/CE · 360 m² a R$ 1,26 mi é 'mais viável'",
@@ -823,7 +823,7 @@ export const PERSONAS: PersonaSummary[] = [
       "Como você compara esse produto com o Alphaville?",
       "O que você imagina para a sua casa dos sonhos?",
     ],
-    avatar: luanaImg,
+    avatar: luanaImg.url,
     markdownPath: "/persona-md/fortaleza_bld/Persona_Fortaleza_7_Luana_Vasconcelos.md",
     role: "Cirurgiã-dentista — Estética",
     tagline: "36 anos · Fortaleza/CE · compara tudo ao Alphaville",

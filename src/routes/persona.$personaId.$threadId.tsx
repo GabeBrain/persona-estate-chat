@@ -31,6 +31,16 @@ import {
 } from "@/lib/chat-storage";
 
 export const Route = createFileRoute("/persona/$personaId/$threadId")({
+  head: ({ params }) => {
+    const name = getPersona(params.personaId)?.name ?? "Persona";
+    const title = `Conversa com ${name} · BRAIN Qualitativa`;
+    const description = `Converse com ${name} em uma entrevista qualitativa simulada sobre o mercado imobiliário.`;
+    return { meta: [
+      { title }, { name: "description", content: description },
+      { property: "og:title", content: title }, { property: "og:description", content: description },
+      { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" },
+    ] };
+  },
   component: ChatPage,
 });
 
