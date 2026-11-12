@@ -11,10 +11,23 @@ import gilmarImg from "@/assets/persona-gilmar.jpg.asset.json";
 import thiagoImg from "@/assets/persona-thiago.jpg.asset.json";
 import andreImg from "@/assets/persona-andre.jpg.asset.json";
 import viniciusImg from "@/assets/persona-vinicius.jpg.asset.json";
+import cristianoImg from "@/assets/persona-cristiano.svg";
+import franciscoImg from "@/assets/persona-francisco.svg";
+import alexandreImg from "@/assets/persona-alexandre.svg";
+import andersonMoreiraImg from "@/assets/persona-anderson_moreira.svg";
+import joseEduardoImg from "@/assets/persona-jose_eduardo.svg";
+import eduardoBenevidesImg from "@/assets/persona-eduardo_benevides.svg";
+import luanaImg from "@/assets/persona-luana.svg";
 
 export type InterestLevel = "ALTO" | "MÉDIO" | "BAIXO";
 
-export type PersonaContext = "plaenge" | "aquiraz" | "prudente" | "campo_alegre" | "alta_floresta";
+export type PersonaContext =
+  | "plaenge"
+  | "aquiraz"
+  | "prudente"
+  | "campo_alegre"
+  | "alta_floresta"
+  | "fortaleza-bld";
 
 export const CONTEXT_LABELS: Record<PersonaContext, string> = {
   plaenge: "PLAENGE — Gov. Celso Ramos/SC",
@@ -22,6 +35,7 @@ export const CONTEXT_LABELS: Record<PersonaContext, string> = {
   prudente: "Presidente Prudente — Horizontal",
   campo_alegre: "Monte Sereno — Campo Alegre/SC",
   alta_floresta: "Grupo Almeida Prado — Alta Floresta/MT",
+  "fortaleza-bld": "Fortaleza — BLD (lotes, Praia do Futuro II)",
 };
 
 export const CONTEXT_ORDER: PersonaContext[] = [
@@ -30,6 +44,7 @@ export const CONTEXT_ORDER: PersonaContext[] = [
   "prudente",
   "campo_alegre",
   "alta_floresta",
+  "fortaleza-bld",
 ];
 
 export type PersonaSummary = {
@@ -547,6 +562,272 @@ export const PERSONAS: PersonaSummary[] = [
     role: "Engenheiro Civil — Construção e Venda (mercado popular)",
     tagline: "27 anos · Alta Floresta/MT · teto R$ 1.200/m² (lote)",
     bio: "Engenheiro civil, ex-cartório, hoje constrói e vende casas para o mercado popular em Alta Floresta. Como investidor o produto não fecha com seu perfil, mas como morador compraria.",
+  },
+  {
+    id: "cristiano_albuquerque",
+    context: "fortaleza-bld",
+    name: "Cristiano Albuquerque",
+    initials: "CA",
+    color: "bg-orange-800",
+    age: 50,
+    city: "Fortaleza/CE",
+    occupation: "Empresário — Distribuidora de Alimentos",
+    profile: "Casado, 4 filhos",
+    income: "Acima de R$ 100k/mês",
+    priceCeiling: "R$ 3.000/m²",
+    preferredProduct: "Lote de 700 m² ou mais",
+    initialInterest: "BAIXO",
+    decisionCriteria: [
+      "Lote de 700 m² ou mais, com poucos vizinhos",
+      "Portaria presencial 24h e controle de entregadores",
+      "Exclusividade: padrão homogêneo de lotes",
+      "Algo mais moderno que o condomínio onde mora (Edson Queiroz)",
+      "Preço até R$ 3.000/m², pagamento durante a obra",
+    ],
+    mainObjections: [
+      "Lote de 360 m² descartado: 'quanto menor o lote, mais vizinho'",
+      "Quantidade de lotes e mistura de padrão",
+      "Segurança do entorno e localização (nota 5)",
+      "Preço acima de R$ 3.000/m²",
+    ],
+    suggestedPrompts: [
+      "Me conta um pouco sobre você e sua família.",
+      "Como é o condomínio onde você mora hoje e o que mudaria nele?",
+      "O que faria você trocar de casa?",
+    ],
+    avatar: cristianoImg,
+    markdownPath: "/persona-md/fortaleza_bld/Persona_Fortaleza_1_Cristiano_Albuquerque.md",
+    role: "Empresário — Distribuidora de Alimentos",
+    tagline: "50 anos · Fortaleza/CE · teto R$ 3.000/m²",
+    bio: "Dono de uma distribuidora de alimentos, mora no Edson Queiroz num lote de 1.000 m². Só mudaria para algo mais moderno e com poucos vizinhos: o lote de 360 m² está descartado.",
+  },
+  {
+    id: "francisco_bezerra",
+    context: "fortaleza-bld",
+    name: "Francisco Bezerra",
+    initials: "FB",
+    color: "bg-blue-800",
+    age: 41,
+    city: "Fortaleza/CE",
+    occupation: "Empresário — Telecomunicações",
+    profile: "Casado, 5 filhos",
+    income: "Acima de R$ 100k/mês",
+    priceCeiling: "R$ 3.500/m² (só com lote de 800–1.000 m²)",
+    preferredProduct: "Lote de 800–1.000 m², ~100 lotes",
+    initialInterest: "BAIXO",
+    decisionCriteria: [
+      "Lote de 800 a 1.000 m² (nem 720 m² atrai)",
+      "No máximo ~100 vizinhos e venda por carta-convite",
+      "Lazer excelente e arquitetura renomada",
+      "Segurança com tecnologia e integração com a polícia",
+      "Preço premium só se o produto for realmente premium",
+    ],
+    mainObjections: [
+      "360 m² 'popular demais, interesse zero'",
+      "Concorrência próxima: 'mais um do mesmo'",
+      "Demanda para 100 lotes a R$ 4.000/m²",
+      "Maresia corrói ferro: material precisa durar",
+    ],
+    suggestedPrompts: [
+      "Me fala de você e da sua família.",
+      "O que faz um condomínio ser premium pra você?",
+      "Como você enxerga a concorrência na região da Praia do Futuro?",
+    ],
+    avatar: franciscoImg,
+    markdownPath: "/persona-md/fortaleza_bld/Persona_Fortaleza_2_Francisco_Bezerra.md",
+    role: "Empresário — Telecomunicações",
+    tagline: "41 anos · Fortaleza/CE · teto R$ 3.500/m² (lote 800–1.000 m²)",
+    bio: "Empresário de telecom com 5 filhos, mora num condomínio da Marquise no Edson Queiroz. Rejeita o lote de 360 m² como 'popular demais', mas seria compra certa com lotes de 800 a 1.000 m².",
+  },
+  {
+    id: "alexandre_holanda",
+    context: "fortaleza-bld",
+    name: "Alexandre Holanda",
+    initials: "AH",
+    color: "bg-green-800",
+    age: 58,
+    city: "Fortaleza/CE",
+    occupation: "Empresário e Investidor — Imobiliário e Alimentos",
+    profile: "Casado, 4 filhos (esposa cônsul)",
+    income: "Acima de R$ 100k/mês",
+    priceCeiling: "R$ 2.500–3.000/m²",
+    preferredProduct: "2 lotes de 540 m²",
+    initialInterest: "MÉDIO",
+    decisionCriteria: [
+      "Entorno equilibrado: sem torres de padrão econômico na frente",
+      "Segurança real (eclusa, barreira robusta), não só cancela",
+      "Preço entre R$ 2.500 e R$ 3.000/m²",
+      "Condomínio até R$ 3/m²",
+      "Lazer realmente usado: tênis, padel, piscina de raia",
+    ],
+    mainObjections: [
+      "~30 prédios de padrão econômico previstos do outro lado da avenida",
+      "Perda de vista e privacidade",
+      "R$ 4.000/m² 'muito caro'; recusa R$ 3.500",
+      "Gentilezas urbanas abertas ao público",
+    ],
+    suggestedPrompts: [
+      "Me conta um pouco da sua trajetória e de onde você mora.",
+      "O que você considera decisivo no entorno de um condomínio?",
+      "Como você avalia a segurança dos condomínios de alto padrão?",
+    ],
+    avatar: alexandreImg,
+    markdownPath: "/persona-md/fortaleza_bld/Persona_Fortaleza_3_Alexandre_Holanda.md",
+    role: "Empresário e Investidor — Imobiliário e Alimentos",
+    tagline: "58 anos · Fortaleza/CE · teto R$ 2.500–3.000/m²",
+    bio: "Empresário e investidor que mora pertinho do terreno, no Bairro de Lourdes. Gosta do produto, mas o entorno (torres de padrão econômico e comunidades na descida da Aldy Mentor) o deixa 'questionador'.",
+  },
+  {
+    id: "anderson_moreira",
+    context: "fortaleza-bld",
+    name: "Anderson Moreira",
+    initials: "AM",
+    color: "bg-teal-800",
+    age: 37,
+    city: "Fortaleza/CE",
+    occupation: "Empreendedor — Tecnologia e Consultoria Financeira",
+    profile: "Noivo de médica, sem filhos",
+    income: "R$ 110–120k/mês",
+    priceCeiling: "R$ 3.500/m² (R$ 1,26 mi no 360 m²)",
+    preferredProduct: "Lote de 360 m² para construir",
+    initialInterest: "ALTO",
+    decisionCriteria: [
+      "Primeira casa do casal: lote para construir 'com a nossa cara'",
+      "Acesso e segurança (tecnologia + pessoas)",
+      "Menos lotes: pagaria mais por ~100 lotes de 700 m²",
+      "Parcelamento curto: ideal 24x, no máximo 36x",
+      "Club house centralizado, coworking e academia interna",
+    ],
+    mainObjections: [
+      "230 lotes: superlotação, gestão e privacidade",
+      "Parcelas de 4 a 5 anos",
+      "R$ 4.000 e R$ 3.750/m² sem desconto",
+      "Piscina lotada no fim de semana",
+    ],
+    suggestedPrompts: [
+      "Me conta como é a sua rotina e a da sua noiva.",
+      "O que você imagina para a primeira casa de vocês?",
+      "Como você pensa em pagar um lote assim?",
+    ],
+    avatar: andersonMoreiraImg,
+    markdownPath: "/persona-md/fortaleza_bld/Persona_Fortaleza_4_Anderson_Moreira.md",
+    role: "Empreendedor — Tecnologia e Consultoria Financeira",
+    tagline: "37 anos · Fortaleza/CE · fecha a R$ 3.500/m²",
+    bio: "Empreendedor de tecnologia, mora em Messejana e é noivo de uma médica. Busca a primeira casa do casal e gostou do projeto: sua atenção está nos 230 lotes e no parcelamento.",
+  },
+  {
+    id: "jose_eduardo_fontenele",
+    context: "fortaleza-bld",
+    name: "José Eduardo Fontenele",
+    initials: "JF",
+    color: "bg-purple-800",
+    age: 53,
+    city: "Fortaleza/CE",
+    occupation: "Industrial de Alimentos",
+    profile: "Casado há 27 anos, 3 filhos",
+    income: "Acima de R$ 100k/mês",
+    priceCeiling: "R$ 3.500/m² no 360 m² (~R$ 1,26 mi)",
+    preferredProduct: "Segunda moradia ou apartamento (hoje não busca casa)",
+    initialInterest: "MÉDIO",
+    decisionCriteria: [
+      "Arquitetura, paisagismo e localização",
+      "Poder viver a pé (ser pedestre) e vista mar",
+      "Regras claras de convivência no condomínio",
+      "Gentilezas urbanas bem operadas (assinaturas de qualidade)",
+      "Lazer dimensionado para 230 lotes (tênis de saibro, academia ampla)",
+    ],
+    mainObjections: [
+      "Isolamento: não dá para ir a pé nem de bicicleta até a Praia do Futuro",
+      "Mall e restaurante dependem de quem opera",
+      "Hoje busca segunda moradia ou apartamento, não casa",
+      "Lazer subdimensionado (3 esteiras para 230 lotes)",
+    ],
+    suggestedPrompts: [
+      "Me fala de você e da sua família.",
+      "Por que andar a pé na cidade é tão importante pra você?",
+      "O que muda se você estivesse buscando casa?",
+    ],
+    avatar: joseEduardoImg,
+    markdownPath: "/persona-md/fortaleza_bld/Persona_Fortaleza_5_JoseEduardo_Fontenele.md",
+    role: "Industrial de Alimentos",
+    tagline: "53 anos · Fortaleza/CE · aceita R$ 3.500/m² no 360 m²",
+    bio: "Industrial que mora de frente para o mar, no Meireles, e valoriza ser pedestre. Adora arquitetura, paisagismo e localização, mas hoje quer segunda moradia ou apartamento, não casa.",
+  },
+  {
+    id: "eduardo_benevides",
+    context: "fortaleza-bld",
+    name: "Eduardo Benevides",
+    initials: "EB",
+    color: "bg-amber-800",
+    age: 64,
+    city: "Fortaleza/CE",
+    occupation: "Empresário — Educação e Consultoria",
+    profile: "Casado há 41 anos, 2 filhos casados",
+    income: "Pró-labore ~R$ 100k",
+    priceCeiling: "360 m² a R$ 1,26 mi (540 m² esticado)",
+    preferredProduct: "Lote de 540 m² (acha 'um lote show')",
+    initialInterest: "MÉDIO",
+    decisionCriteria: [
+      "Mix de metragens, a partir de 360 m²",
+      "Chegada iluminada e segura (iluminação pública à noite)",
+      "Lotes longe do muro lateral",
+      "Conveniência no mall: farmácia, fisioterapia, padaria",
+      "Vista mar e piscina bem dimensionada",
+    ],
+    mainObjections: [
+      "Preço por m² esticado, sobretudo no 540 m²",
+      "Iluminação pública e acesso à noite",
+      "Lotes encostados no muro lateral",
+      "Momento de vida: a sogra precisa de assistência",
+    ],
+    suggestedPrompts: [
+      "Me conta sobre você e sua rotina.",
+      "O que você pensa sobre mudar de apartamento para casa?",
+      "Como você compara esse produto com o Aquiraz Riviera?",
+    ],
+    avatar: eduardoBenevidesImg,
+    markdownPath: "/persona-md/fortaleza_bld/Persona_Fortaleza_6_Eduardo_Benevides.md",
+    role: "Empresário — Educação e Consultoria",
+    tagline: "64 anos · Fortaleza/CE · 360 m² a R$ 1,26 mi é 'mais viável'",
+    bio: "Empresário de educação e consultoria, mora há 20 anos na Aldeota e atende incorporadoras. Gosta do conceito e acha o 540 m² 'um lote show', mas o preço está esticado e o momento de vida o segura.",
+  },
+  {
+    id: "luana_vasconcelos",
+    context: "fortaleza-bld",
+    name: "Luana Vasconcelos",
+    initials: "LV",
+    color: "bg-pink-800",
+    age: 36,
+    city: "Fortaleza/CE",
+    occupation: "Cirurgiã-dentista — Estética",
+    profile: "Noiva, mineira (em Fortaleza há pouco tempo)",
+    income: "~R$ 80k/mês + patrimônio",
+    priceCeiling: "Ancorada no Alphaville (R$ 300–500 mil)",
+    preferredProduct: "Lote de 360 m² (12x30) para casa térrea",
+    initialInterest: "MÉDIO",
+    decisionCriteria: [
+      "Sonho de casa térrea construída do jeito dela",
+      "Lote de 12x30 m: 'ideal'",
+      "Quem circula e quem mora perto do condomínio",
+      "Verde e estrutura interna completa (mercadinho autônomo)",
+      "Preço comparado ao Alphaville",
+    ],
+    mainObjections: [
+      "Preço: tudo acima do Alphaville ('um milhão a mais')",
+      "Gentilezas urbanas abertas ao público",
+      "Vista: 'vão subir prédios'",
+      "Pouco tempo na cidade: precisa conhecer a vizinhança",
+    ],
+    suggestedPrompts: [
+      "Me conta um pouco sobre você e sua rotina em Fortaleza.",
+      "Como você compara esse produto com o Alphaville?",
+      "O que você imagina para a sua casa dos sonhos?",
+    ],
+    avatar: luanaImg,
+    markdownPath: "/persona-md/fortaleza_bld/Persona_Fortaleza_7_Luana_Vasconcelos.md",
+    role: "Cirurgiã-dentista — Estética",
+    tagline: "36 anos · Fortaleza/CE · compara tudo ao Alphaville",
+    bio: "Mineira, cirurgiã-dentista com clínica na Aldeota, sonha com casa térrea. Ama a estrutura, o verde e o lote de 360 m², mas o preço, sempre comparado ao Alphaville, 'arrebentou'.",
   },
 ];
 

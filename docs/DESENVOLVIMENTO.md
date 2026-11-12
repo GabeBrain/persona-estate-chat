@@ -101,7 +101,7 @@ src/
 │   ├── navigation.tsx     ← fonte única de navegação: páginas, perfis, jornadas
 │   ├── personas.ts        ← metadados das personas (client-safe), incl. `context`, `CONTEXT_LABELS`
 │   ├── personas.server.ts ← carrega system prompts (.txt) — server only
-│   ├── persona-prompts/   ← renato.txt | claudia.txt | rodrigo.txt | sergio_ce.txt | henrique_ce.txt | ester_ce.txt | paula_ce.txt | anderson_prudente.txt | sergio_prudente.txt
+│   ├── persona-prompts/   ← <persona>.txt, um por persona (ex.: renato.txt, anderson_prudente.txt, luana_vasconcelos.txt)
 │   └── chat-storage.ts    ← persistência de threads em localStorage
 └── assets/                ← avatares das personas
 public/persona-md/         ← fichas markdown completas servidas estaticamente
@@ -162,8 +162,14 @@ public/persona-md/         ← fichas markdown completas servidas estaticamente
 
 ### Contextos e troca de persona
 
-- Cada persona tem um `context` (`"plaenge"` | `"aquiraz"` | `"prudente"` | `"campo_alegre"` |
+- Cada persona tem um `context` (`"plaenge"` | `"aquiraz"` | `"prudente"` | `"campo_alegre"` | `"fortaleza-bld"` |
   `"alta_floresta"`); o rótulo do empreendimento vem de `CONTEXT_LABELS` em `personas.ts`.
+- `fortaleza-bld` (2026-11-12): 7 personas do condomínio de lotes BLD/Marquise na Praia do Futuro II
+  (Cristiano Albuquerque, Francisco Bezerra, Alexandre Holanda, Anderson Moreira, José Eduardo
+  Fontenele, Eduardo Benevides, Luana Vasconcelos). Fichas em `public/persona-md/fortaleza_bld/`,
+  prompts em `src/lib/persona-prompts/<nome>_<sobrenome>.txt`. É um contexto separado de
+  `aquiraz` (outro produto, vertical). Os avatares são **SVGs provisórios com iniciais**
+  (`src/assets/persona-*.svg`), à espera de retratos.
 - Desde 2026-11-11 (layout BRAIN Qualitativa) não há mais seletor de persona no topo do
   chat: a troca acontece pela galeria (`/personas`) ou pela busca global (Ctrl + K), que
   navegam para `/persona/$personaId` e reabrem a thread mais recente dessa persona (ou

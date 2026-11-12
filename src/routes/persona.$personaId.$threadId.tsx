@@ -867,6 +867,13 @@ function ChatPage() {
             </p>
           )}
 
+          {persona.context === "fortaleza-bld" && (
+            <p className="text-xs text-muted-foreground">
+              <span className="font-medium text-foreground">Empreendimento:</span> BLD + Marquise ·
+              Condomínio de lotes de altíssimo padrão · Praia do Futuro II · Fortaleza/CE
+            </p>
+          )}
+
           {/* Interest manual override */}
           <div className="rounded-xl border border-border p-3">
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
