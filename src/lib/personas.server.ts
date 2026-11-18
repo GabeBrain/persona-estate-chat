@@ -18,6 +18,8 @@ import andersonMoreiraPrompt from "./persona-prompts/anderson_moreira.txt?raw";
 import joseEduardoFontenelePrompt from "./persona-prompts/jose_eduardo_fontenele.txt?raw";
 import eduardoBenevidesPrompt from "./persona-prompts/eduardo_benevides.txt?raw";
 import luanaVasconcelosPrompt from "./persona-prompts/luana_vasconcelos.txt?raw";
+import arethuzaLinharesPrompt from "./persona-prompts/arethuza_linhares.txt?raw";
+import rafaelSarmentoPrompt from "./persona-prompts/rafael_sarmento.txt?raw";
 
 const PROMPTS: Record<string, string> = {
   renato: renatoPrompt,
@@ -40,6 +42,8 @@ const PROMPTS: Record<string, string> = {
   jose_eduardo_fontenele: joseEduardoFontenelePrompt,
   eduardo_benevides: eduardoBenevidesPrompt,
   luana_vasconcelos: luanaVasconcelosPrompt,
+  arethuza_linhares: arethuzaLinharesPrompt,
+  rafael_sarmento: rafaelSarmentoPrompt,
 };
 
 export function getSystemPrompt(personaId: string, forcedInterest?: string | null): string {

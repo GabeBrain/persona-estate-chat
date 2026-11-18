@@ -884,6 +884,13 @@ function ChatPage() {
             </p>
           )}
 
+          {persona.context === "vitoria-mivita" && (
+            <p className="text-xs text-muted-foreground">
+              <span className="font-medium text-foreground">Empreendimento:</span> Mivita ·
+              Vertical resort living frente-mar · Av. Dante Michelini, Jardim Camburi · Vitória/ES
+            </p>
+          )}
+
           {/* Interest manual override */}
           <div className="rounded-xl border border-border p-3">
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">

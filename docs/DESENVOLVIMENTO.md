@@ -4,7 +4,7 @@
 > análise de performance, UX e segurança do estado atual.
 > Para o histórico de etapas e o planejamento, ver [ROADMAP.md](./ROADMAP.md).
 
-Última atualização: 2026-11-11
+Última atualização: 2026-11-18
 
 ---
 
@@ -163,7 +163,15 @@ public/persona-md/         ← fichas markdown completas servidas estaticamente
 ### Contextos e troca de persona
 
 - Cada persona tem um `context` (`"plaenge"` | `"aquiraz"` | `"prudente"` | `"campo_alegre"` | `"fortaleza-bld"` |
-  `"alta_floresta"`); o rótulo do empreendimento vem de `CONTEXT_LABELS` em `personas.ts`.
+  `"alta_floresta"` | `"vitoria-mivita"`); o rótulo do empreendimento vem de `CONTEXT_LABELS` em `personas.ts`.
+- `vitoria-mivita` (2026-11-18): 2 personas do Mivita, vertical resort living frente-mar na Av. Dante
+  Michelini, Jardim Camburi, Vitória/ES (Arethuza Linhares, Vitória, primeira moradia; Rafael
+  Sarmento, SP, residência de apoio). Fichas em `public/persona-md/vitoria_mivita/`, prompts em
+  `src/lib/persona-prompts/<nome>_<sobrenome>.txt`. Renda ajustada nas duas (filtro do roteiro:
+  acima de R$ 100 mil), explicada nas fichas. Rafael aparece na galeria em São Paulo/SP (`city` =
+  residência). Avatares são **SVGs provisórios com iniciais** (`persona-arethuza.svg`,
+  `persona-rafael.svg`), à espera de retratos. Pendências a confirmar com o book: nome do hotel
+  antigo e grafia da rua lateral.
 - `fortaleza-bld` (2026-11-12): 7 personas do condomínio de lotes BLD/Marquise na Praia do Futuro II
   (Cristiano Albuquerque, Francisco Bezerra, Alexandre Holanda, Anderson Moreira, José Eduardo
   Fontenele, Eduardo Benevides, Luana Vasconcelos). Fichas em `public/persona-md/fortaleza_bld/`,

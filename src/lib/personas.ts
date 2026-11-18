@@ -18,6 +18,8 @@ import andersonMoreiraImg from "@/assets/persona-anderson_moreira.jpg.asset.json
 import joseEduardoImg from "@/assets/persona-jose_eduardo.jpg.asset.json";
 import eduardoBenevidesImg from "@/assets/persona-eduardo_benevides.jpg.asset.json";
 import luanaImg from "@/assets/persona-luana.jpg.asset.json";
+import arethuzaImg from "@/assets/persona-arethuza.svg";
+import rafaelImg from "@/assets/persona-rafael.svg";
 
 export type InterestLevel = "ALTO" | "MÉDIO" | "BAIXO";
 
@@ -27,7 +29,8 @@ export type PersonaContext =
   | "prudente"
   | "campo_alegre"
   | "alta_floresta"
-  | "fortaleza-bld";
+  | "fortaleza-bld"
+  | "vitoria-mivita";
 
 export const CONTEXT_LABELS: Record<PersonaContext, string> = {
   plaenge: "PLAENGE — Gov. Celso Ramos/SC",
@@ -36,6 +39,7 @@ export const CONTEXT_LABELS: Record<PersonaContext, string> = {
   campo_alegre: "Monte Sereno — Campo Alegre/SC",
   alta_floresta: "Grupo Almeida Prado — Alta Floresta/MT",
   "fortaleza-bld": "Fortaleza — BLD (lotes, Praia do Futuro II)",
+  "vitoria-mivita": "Vitória — Mivita (vertical resort living, Jardim Camburi)",
 };
 
 export const CONTEXT_ORDER: PersonaContext[] = [
@@ -45,6 +49,7 @@ export const CONTEXT_ORDER: PersonaContext[] = [
   "campo_alegre",
   "alta_floresta",
   "fortaleza-bld",
+  "vitoria-mivita",
 ];
 
 export type PersonaSummary = {
@@ -828,6 +833,82 @@ export const PERSONAS: PersonaSummary[] = [
     role: "Cirurgiã-dentista — Estética",
     tagline: "36 anos · Fortaleza/CE · compara tudo ao Alphaville",
     bio: "Mineira, cirurgiã-dentista com clínica na Aldeota, sonha com casa térrea. Ama a estrutura, o verde e o lote de 360 m², mas o preço, sempre comparado ao Alphaville, 'arrebentou'.",
+  },
+  {
+    id: "arethuza_linhares",
+    context: "vitoria-mivita",
+    name: "Arethuza Linhares",
+    initials: "AL",
+    color: "bg-teal-700",
+    age: 47,
+    city: "Vitória/ES",
+    occupation: "Comercial — Equipamentos de diagnóstico por imagem",
+    profile: "Casada, 1 filha (12), mineira em Jardim Camburi",
+    income: "~R$ 110k/mês (com comissão)",
+    priceCeiling: "~R$ 3,5 mi (espontâneo R$ 3 mi)",
+    preferredProduct: "210 m² frente-mar (só pelo hall privativo)",
+    initialInterest: "MÉDIO",
+    decisionCriteria: [
+      "Lazer para a filha sem sair do prédio",
+      "Hall privativo: só sai do atual para outro um por andar",
+      "4 quartos e DCE (funcionária em tempo integral)",
+      "Frente para o mar, suíte ao fundo, cozinha fechada",
+      "Segurança: biometria e elevador que só para no andar",
+    ],
+    mainObjections: [
+      "Preço: descarta R$ 6,3 / 5,88 / 5,46 mi ('compraria uma casa em condomínio')",
+      "Mall aberto ao público na entrada do condomínio",
+      "Valor do condomínio com tanto lazer",
+      "Resort living só 'até a página 2' (ruído)",
+    ],
+    suggestedPrompts: [
+      "Me fala um pouco de você e da sua família.",
+      "O que faria vocês saírem do apartamento atual?",
+      "Como você vê o acesso passando pelo mall e pela área de lazer?",
+    ],
+    avatar: arethuzaImg,
+    markdownPath: "/persona-md/vitoria_mivita/Persona_Vitoria_1_Arethuza_Linhares.md",
+    role: "Comercial — Diagnóstico por imagem",
+    tagline: "47 anos · Vitória/ES · quer lazer sem perder o um por andar",
+    bio: "Mineira, mora num um por andar sem lazer no Jardim Camburi e viaja muito a trabalho. Gostou da metragem e do frente-mar, mas teme o mall aberto e descarta a tabela: teto de uns R$ 3,5 mi.",
+  },
+  {
+    id: "rafael_sarmento",
+    context: "vitoria-mivita",
+    name: "Rafael Sarmento",
+    initials: "RS",
+    color: "bg-blue-700",
+    age: 36,
+    city: "São Paulo/SP",
+    occupation: "Sócio — Tecnologia para arquitetura e design",
+    profile: "Solteiro, sem filhos; divide a semana entre SP e Vitória",
+    income: "~R$ 120k/mês",
+    priceCeiling: "~R$ 5 mi (R$ 5,46 mi 'fica interessante')",
+    preferredProduct: "210 m² frente-mar (a vista decide)",
+    initialInterest: "MÉDIO",
+    decisionCriteria: [
+      "Localização: caminhabilidade e perto do aeroporto",
+      "Arquitetura original, com conexão com a região",
+      "Vista: 'o ativo mais subvalorizado de qualquer compra'",
+      "Resort com serviço, não só espaço",
+      "LEED como desempate de liquidez",
+    ],
+    mainObjections: [
+      "Acesso pelo mall + escada + lazer: 'não é feito pro cara andar'",
+      "Resort sem serviço",
+      "Fachada genérica: 'podia estar em qualquer lugar do mundo'",
+      "R$ 6,3 mi exige negociação; continuaria olhando o mercado",
+    ],
+    suggestedPrompts: [
+      "Me conta como é a sua rotina entre São Paulo e Vitória.",
+      "O que você acha do mall no térreo?",
+      "O que faria você sentir que isso é de fato um resort?",
+    ],
+    avatar: rafaelImg,
+    markdownPath: "/persona-md/vitoria_mivita/Persona_Vitoria_2_Rafael_Sarmento.md",
+    role: "Sócio — Tecnologia para arquitetura",
+    tagline: "36 anos · São Paulo/SP · residência de apoio em Vitória",
+    bio: "Paulistano, sócio de empresa com sede em Vitória. Adora o mall e a vista, mas critica o caminho até o apartamento e o 'resort sem serviço'. A R$ 5,46 mi com sinal de 15% 'fica interessante'.",
   },
 ];
 
