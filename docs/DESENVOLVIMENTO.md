@@ -168,8 +168,8 @@ public/persona-md/         ← fichas markdown completas servidas estaticamente
   Michelini, Jardim Camburi, Vitória/ES (Arethuza Linhares, Vitória, primeira moradia; Rafael
   Sarmento, SP, residência de apoio). Fichas em `public/persona-md/vitoria_mivita/`, prompts em
   `src/lib/persona-prompts/<nome>_<sobrenome>.txt`. Renda ajustada nas duas (filtro do roteiro:
-  acima de R$ 100 mil), explicada nas fichas. Rafael aparece na galeria em São Paulo/SP (`city` =
-  residência). Avatares são **SVGs provisórios com iniciais** (`persona-arethuza.svg`,
+  acima de R$ 100 mil), explicada nas fichas. Rafael mora em SP, mas `city` é "Vitória/ES"
+  (decisão de 2026-11-18: agrupar pela cidade pesquisada); a residência fica em `profile`. Avatares são **SVGs provisórios com iniciais** (`persona-arethuza.svg`,
   `persona-rafael.svg`), à espera de retratos. Pendências a confirmar com o book: nome do hotel
   antigo e grafia da rua lateral.
 - `fortaleza-bld` (2026-11-12): 7 personas do condomínio de lotes BLD/Marquise na Praia do Futuro II
